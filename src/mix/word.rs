@@ -11,13 +11,13 @@ pub struct Word {
 }
 
 impl Word {
-  pub fn value(&self) -> i64 {
+  pub fn value(&self) -> isize {
     let magnitude = self
       .bytes
       .iter()
       .enumerate()
       .fold(0, |total, (index, byte)| {
-        total + (64u64.pow(5 - index as u32 - 1) as i64 * *byte as i64)
+        total + (64isize.pow(5 - index as u32 - 1) * *byte as isize)
       });
 
     let sign = if self.sign == Sign::Positive { 1 } else { -1 };

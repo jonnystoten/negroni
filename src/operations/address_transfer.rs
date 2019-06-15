@@ -35,7 +35,7 @@ mod tests {
       address: mix::Address::new(2000),
       index_specification: 0,
       modification: 2,
-      operation: 48,
+      operation: mix::op_codes::ENTA,
     };
 
     instruction.decode().execute(&mut computer);
@@ -50,7 +50,7 @@ mod tests {
       address: mix::Address::new(-2000),
       index_specification: 0,
       modification: 2,
-      operation: 48,
+      operation: mix::op_codes::ENTA,
     };
 
     instruction.decode().execute(&mut computer);

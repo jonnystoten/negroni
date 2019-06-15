@@ -1,5 +1,6 @@
-use super::{Word, Address};
+use super::{Address, Word};
 use crate::operations;
+use crate::mix::op_codes;
 
 pub struct Instruction {
   pub operation: u8,
@@ -27,8 +28,8 @@ impl Instruction {
 
   pub fn decode(&self) -> Box<dyn operations::Operation + '_> {
     match self.operation {
-      8 => Box::new(operations::Load::new(self)),
-      48 => Box::new(operations::AddressTransfer::new(self)),
+      op_codes::LDA => Box::new(operations::Load::new(self)),
+      op_codes::ENTA => Box::new(operations::AddressTransfer::new(self)),
       _ => panic!("unknown op code"),
     }
   }

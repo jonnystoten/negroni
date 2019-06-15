@@ -20,6 +20,52 @@ impl Word {
     }
   }
 
+  pub fn from_value(value: isize) -> Word {
+    if !Word::fits_in_word(value) {
+      panic!("unexpected word overflow! value: {:?}", value);
+    }
+
+    Word::from_value_impl(value, false)
+  }
+
+  pub fn from_value_with_overflow(value: isize) -> Word {
+    if Word::fits_in_word(value) {
+      panic!(
+        "from_value_with_overflow is only for word overflow! value: {:?}",
+        value
+      );
+    }
+
+    Word::from_value_impl(value, true)
+  }
+
+  fn from_value_impl(mut value: isize, allow_overflow: bool) -> Word {
+    let mut word = Word::new();
+
+    if value < 0 {
+      word.sign = Sign::Positive;
+      value *= -1
+    }
+
+    if allow_overflow {
+      value = value - 64isize.pow(5);
+    }
+
+    for i in 0..5 {
+      let max_val = 64isize.pow(4 - i);
+      let b = (value / max_val) as u8;
+      word.bytes[i as usize] = b;
+      value %= max_val
+    }
+
+    word
+  }
+
+  pub fn fits_in_word(value: isize) -> bool {
+    let max = 64isize.pow(5) - 1;
+    value.abs() <= max
+  }
+
   pub fn value(&self) -> isize {
     let magnitude = self
       .bytes

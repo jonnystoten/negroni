@@ -1,3 +1,6 @@
+pub const ADD: u8 = 1;
+pub const SUB: u8 = 2;
+
 pub const LDA: u8 = 8;
 pub const LD1: u8 = 9;
 pub const LD2: u8 = 10;

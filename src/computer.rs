@@ -8,6 +8,7 @@ pub struct Computer {
   pub indexes: [mix::Address; 6],
   pub jump_address: mix::Address,
   pub memory: [mix::Word; 4000],
+  pub overflow: bool,
 }
 
 impl Computer {
@@ -37,6 +38,7 @@ impl Computer {
         sign: mix::Sign::Positive,
       },
       memory,
+      overflow: false,
     }
   }
 

@@ -27,7 +27,7 @@ impl Instruction {
   pub fn decode(&self) -> Box<dyn operations::Operation + '_> {
     match self.operation {
       op_codes::LDA...op_codes::LDXN => Box::new(operations::Load::new(self)),
-      op_codes::STA...op_codes::STX => Box::new(operations::Store::new(self)),
+      op_codes::STA...op_codes::STZ => Box::new(operations::Store::new(self)),
       op_codes::ENTA => Box::new(operations::AddressTransfer::new(self)),
       _ => panic!("unknown opcode {}", self.operation),
     }

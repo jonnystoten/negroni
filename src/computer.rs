@@ -6,6 +6,7 @@ pub struct Computer {
   pub accumulator: mix::Word,
   pub extension: mix::Word,
   pub indexes: [mix::Address; 6],
+  pub jump_address: mix::Address,
   pub memory: [mix::Word; 4000],
 }
 
@@ -31,6 +32,10 @@ impl Computer {
         sign: mix::Sign::Positive,
       },
       indexes,
+      jump_address: mix::Address {
+        bytes: [0, 0],
+        sign: mix::Sign::Positive,
+      },
       memory,
     }
   }
@@ -48,14 +53,15 @@ impl fmt::Debug for Computer {
       f,
       "\
 Computer {{
-  A:  {:?}
-  X:  {:?}
-  I1: {:?}
-  I2: {:?}
-  I3: {:?}
-  I4: {:?}
-  I5: {:?}
-  I6: {:?}
+  rA:  {:?}
+  rX:  {:?}
+  rI1: {:?}
+  rI2: {:?}
+  rI3: {:?}
+  rI4: {:?}
+  rI5: {:?}
+  rI6: {:?}
+  rJ:  {:?}
 }}",
       self.accumulator.value(),
       self.extension.value(),
@@ -65,6 +71,7 @@ Computer {{
       self.indexes[3].value(),
       self.indexes[4].value(),
       self.indexes[5].value(),
+      self.jump_address.value(),
     )
   }
 }

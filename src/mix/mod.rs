@@ -40,6 +40,8 @@ pub mod op_codes {
   pub const ST5: u8 = 29;
   pub const ST6: u8 = 30;
   pub const STX: u8 = 31;
+  pub const STJ: u8 = 32;
+  pub const STZ: u8 = 33;
 
   pub const ENTA: u8 = 48;
 }

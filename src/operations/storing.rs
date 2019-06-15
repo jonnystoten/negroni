@@ -22,6 +22,8 @@ impl<'a> Operation for Store<'a> {
         let index = (self.instruction.operation - mix::op_codes::ST1) as usize;
         computer.indexes[index].cast_to_word()
       }
+      mix::op_codes::STJ => computer.jump_address.cast_to_word(),
+      mix::op_codes::STZ => mix::Word::new(),
       _ => panic!("unknown store operation {}", self.instruction.operation),
     };
 
@@ -345,6 +347,194 @@ mod tests {
         sign: mix::Sign::Negative,
       };
       computer.indexes[(index - 1) as usize] = mix::Address {
+        bytes: [6, 7],
+        sign: mix::Sign::Positive,
+      };
+
+      instruction.decode().execute(&mut computer);
+
+      assert_eq!(computer.memory[2000], *expected_mem);
+    }
+  }
+
+  #[test]
+  fn test_stj() {
+    let tests = [
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(0, 5),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [0, 0, 0, 6, 7],
+          sign: mix::Sign::Positive,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(1, 5),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [0, 0, 0, 6, 7],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(5, 5),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [1, 2, 3, 4, 7],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(2, 2),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [1, 7, 3, 4, 5],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(2, 3),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [1, 6, 7, 4, 5],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(0, 1),
+          operation: mix::op_codes::STJ,
+        },
+        mix::Word {
+          bytes: [7, 2, 3, 4, 5],
+          sign: mix::Sign::Positive,
+        },
+      ),
+    ];
+
+    for (instruction, expected_mem) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 2, 3, 4, 5],
+        sign: mix::Sign::Negative,
+      };
+      computer.jump_address = mix::Address {
+        bytes: [6, 7],
+        sign: mix::Sign::Positive,
+      };
+
+      instruction.decode().execute(&mut computer);
+
+      assert_eq!(computer.memory[2000], *expected_mem);
+    }
+  }
+
+  #[test]
+  fn test_stz() {
+    let tests = [
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(0, 5),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [0, 0, 0, 0, 0],
+          sign: mix::Sign::Positive,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(1, 5),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [0, 0, 0, 0, 0],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(5, 5),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [1, 2, 3, 4, 0],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(2, 2),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [1, 0, 3, 4, 5],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(2, 3),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [1, 0, 0, 4, 5],
+          sign: mix::Sign::Negative,
+        },
+      ),
+      (
+        mix::Instruction {
+          address: mix::Address::new(2000),
+          index_specification: 0,
+          modification: mix::field_spec(0, 1),
+          operation: mix::op_codes::STZ,
+        },
+        mix::Word {
+          bytes: [0, 2, 3, 4, 5],
+          sign: mix::Sign::Positive,
+        },
+      ),
+    ];
+
+    for (instruction, expected_mem) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 2, 3, 4, 5],
+        sign: mix::Sign::Negative,
+      };
+      computer.jump_address = mix::Address {
         bytes: [6, 7],
         sign: mix::Sign::Positive,
       };

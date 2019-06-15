@@ -1,4 +1,4 @@
-use super::Sign;
+use super::{Word, Sign};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Address {
@@ -26,5 +26,12 @@ impl Address {
 
     let sign = if self.sign == Sign::Positive { 1 } else { -1 };
     magnitude * sign
+  }
+
+  pub fn cast_to_word(&self) -> Word {
+    Word {
+      bytes: [0, 0, 0, self.bytes[0], self.bytes[1]],
+      sign: self.sign,
+    }
   }
 }

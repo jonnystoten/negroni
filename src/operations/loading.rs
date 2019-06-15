@@ -52,12 +52,6 @@ mod tests {
 
   #[test]
   fn test_lda() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [1, 14, 3, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         mix::Instruction {
@@ -146,6 +140,12 @@ mod tests {
     ];
 
     for (instruction, expected_acc) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 14, 3, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.accumulator, *expected_acc);
@@ -154,12 +154,6 @@ mod tests {
 
   #[test]
   fn test_ldx() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [1, 14, 3, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         mix::Instruction {
@@ -248,6 +242,12 @@ mod tests {
     ];
 
     for (instruction, expected_ext) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 14, 3, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.extension, *expected_ext);
@@ -256,12 +256,6 @@ mod tests {
 
   #[test]
   fn test_ldi() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [0, 0, 0, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         1,
@@ -344,6 +338,12 @@ mod tests {
     ];
 
     for (index, instruction, expected_reg) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [0, 0, 0, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.indexes[(index - 1) as usize], *expected_reg);
@@ -352,12 +352,6 @@ mod tests {
 
   #[test]
   fn test_ldan() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [1, 14, 3, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         mix::Instruction {
@@ -446,6 +440,12 @@ mod tests {
     ];
 
     for (instruction, expected_acc) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 14, 3, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.accumulator, *expected_acc);
@@ -454,12 +454,6 @@ mod tests {
 
   #[test]
   fn test_ldxn() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [1, 14, 3, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         mix::Instruction {
@@ -548,6 +542,12 @@ mod tests {
     ];
 
     for (instruction, expected_ext) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [1, 14, 3, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.extension, *expected_ext);
@@ -556,12 +556,6 @@ mod tests {
 
   #[test]
   fn test_ldin() {
-    let mut computer = Computer::new();
-    computer.memory[2000] = mix::Word {
-      bytes: [0, 0, 0, 5, 4],
-      sign: mix::Sign::Negative,
-    };
-
     let tests = [
       (
         1,
@@ -644,6 +638,12 @@ mod tests {
     ];
 
     for (index, instruction, expected_reg) in &tests {
+      let mut computer = Computer::new();
+      computer.memory[2000] = mix::Word {
+        bytes: [0, 0, 0, 5, 4],
+        sign: mix::Sign::Negative,
+      };
+
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.indexes[(index - 1) as usize], *expected_reg);

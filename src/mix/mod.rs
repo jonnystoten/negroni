@@ -31,5 +31,15 @@ pub mod op_codes {
   pub const LD5N: u8 = 21;
   pub const LD6N: u8 = 22;
   pub const LDXN: u8 = 23;
+
+  pub const STA: u8 = 24;
+  pub const ST1: u8 = 25;
+  pub const ST2: u8 = 26;
+  pub const ST3: u8 = 27;
+  pub const ST4: u8 = 28;
+  pub const ST5: u8 = 29;
+  pub const ST6: u8 = 30;
+  pub const STX: u8 = 31;
+
   pub const ENTA: u8 = 48;
 }

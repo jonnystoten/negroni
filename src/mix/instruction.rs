@@ -1,11 +1,10 @@
+use super::{Word, Address};
+use crate::operations;
 
-use crate::operation::address_transfer::AddressTransfer;
-use crate::operation::Operation;
-use crate::words;
 pub struct Instruction {
   pub operation: u8,
   pub modification: u8,
-  pub address: u16,
+  pub address: Address,
   pub index_specification: u8,
 }
 
@@ -13,19 +12,23 @@ pub struct Instruction {
 const BYTE_SIZE: u8 = 64;
 
 impl Instruction {
-  pub fn from_word(word: words::Word) -> Instruction {
+  pub fn from_word(word: Word) -> Instruction {
     let bytes = word.bytes;
     Instruction {
-      address: ((bytes[0] as u16) * BYTE_SIZE as u16) + bytes[1] as u16,
+      address: Address {
+        bytes: [bytes[0], bytes[1]],
+        sign: word.sign,
+      },
       index_specification: bytes[2],
       modification: bytes[3],
       operation: bytes[4],
     }
   }
 
-  pub fn decode(&self) -> impl Operation + '_ {
+  pub fn decode(&self) -> Box<dyn operations::Operation + '_> {
     match self.operation {
-      48 => AddressTransfer::new(self),
+      8 => Box::new(operations::Load::new(self)),
+      48 => Box::new(operations::AddressTransfer::new(self)),
       _ => panic!("unknown op code"),
     }
   }

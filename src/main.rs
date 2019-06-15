@@ -1,17 +1,15 @@
 mod computer;
-mod instruction;
-mod operation;
-mod words;
 
-use operation::Operation;
+mod mix;
+mod operations;
 
 fn main() {
     let mut computer = computer::Computer::new();
 
     // set the first instruction manually for now
-    computer.memory[0] = words::Word {
+    computer.memory[0] = mix::Word {
         bytes: [10, 20, 0, 0, 48],
-        sign: words::Sign::Positive,
+        sign: mix::Sign::Positive,
     };
 
     let instruction = computer.fetch();

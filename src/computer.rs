@@ -1,38 +1,39 @@
 use std::fmt;
 
-use crate::instruction::Instruction;
-use crate::words;
+use crate::mix;
 
 pub struct Computer {
-  pub accumulator: words::Word,
-  pub memory: [words::Word; 4000],
+  pub accumulator: mix::Word,
+  pub indexes: [mix::Address; 6],
+  pub memory: [mix::Word; 4000],
 }
 
 impl Computer {
   pub fn new() -> Computer {
-    let mut memory = [words::Word {
+    let memory = [mix::Word {
       bytes: [0, 0, 0, 0, 0],
-      sign: words::Sign::Positive,
+      sign: mix::Sign::Positive,
     }; 4000];
 
-    memory[0] = words::Word {
-      bytes: [10, 20, 0, 0, 48],
-      sign: words::Sign::Positive,
-    };
+    let indexes = [mix::Address {
+      bytes: [0, 0],
+      sign: mix::Sign::Positive,
+    }; 6];
 
     Computer {
-      accumulator: words::Word {
+      accumulator: mix::Word {
         bytes: [0, 0, 0, 0, 0],
-        sign: words::Sign::Positive,
+        sign: mix::Sign::Positive,
       },
+      indexes,
       memory,
     }
   }
 
-  pub fn fetch(&self) -> Instruction {
+  pub fn fetch(&self) -> mix::Instruction {
     let word = self.memory[0];
 
-    Instruction::from_word(word)
+    mix::Instruction::from_word(word)
   }
 }
 
@@ -44,7 +45,7 @@ impl fmt::Debug for Computer {
 Computer {{
   A: {:?}
 }}",
-      self.accumulator
+      self.accumulator.value()
     )
   }
 }

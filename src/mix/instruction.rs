@@ -1,16 +1,13 @@
 use super::{Address, Word};
-use crate::operations;
-use crate::mix::op_codes;
 
+use crate::mix::op_codes;
+use crate::operations;
 pub struct Instruction {
   pub operation: u8,
   pub modification: u8,
   pub address: Address,
   pub index_specification: u8,
 }
-
-// TODO: configure this
-const BYTE_SIZE: u8 = 64;
 
 impl Instruction {
   pub fn from_word(word: Word) -> Instruction {
@@ -28,9 +25,9 @@ impl Instruction {
 
   pub fn decode(&self) -> Box<dyn operations::Operation + '_> {
     match self.operation {
-      op_codes::LDA => Box::new(operations::Load::new(self)),
+      op_codes::LDA...op_codes::LDXN => Box::new(operations::Load::new(self)),
       op_codes::ENTA => Box::new(operations::AddressTransfer::new(self)),
-      _ => panic!("unknown op code"),
+      _ => panic!("unknown opcode {}", self.operation),
     }
   }
 }

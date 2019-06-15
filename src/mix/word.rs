@@ -1,3 +1,5 @@
+use super::Address;
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Sign {
   Positive,
@@ -31,6 +33,17 @@ impl Word {
     magnitude * sign
   }
 
+  pub fn toggle_sign(&self) -> Word {
+    Word {
+      bytes: self.bytes,
+      sign: if self.sign == Sign::Positive {
+        Sign::Negative
+      } else {
+        Sign::Positive
+      },
+    }
+  }
+
   pub fn apply_field_spec(&self, spec: u8) -> Word {
     let mut new_word = Word::new();
     new_word.sign = Sign::Positive;
@@ -54,5 +67,12 @@ impl Word {
     }
 
     new_word
+  }
+
+  pub fn cast_to_address(&self) -> Address {
+    Address {
+      bytes: [self.bytes[3], self.bytes[4]],
+      sign: self.sign,
+    }
   }
 }

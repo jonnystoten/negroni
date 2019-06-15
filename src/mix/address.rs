@@ -1,6 +1,6 @@
 use super::Sign;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Address {
   pub sign: Sign,
   pub bytes: [u8; 2],

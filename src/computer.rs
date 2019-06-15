@@ -4,6 +4,7 @@ use crate::mix;
 
 pub struct Computer {
   pub accumulator: mix::Word,
+  pub extension: mix::Word,
   pub indexes: [mix::Address; 6],
   pub memory: [mix::Word; 4000],
 }
@@ -25,6 +26,10 @@ impl Computer {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
       },
+      extension: mix::Word {
+        bytes: [0, 0, 0, 0, 0],
+        sign: mix::Sign::Positive,
+      },
       indexes,
       memory,
     }
@@ -43,9 +48,23 @@ impl fmt::Debug for Computer {
       f,
       "\
 Computer {{
-  A: {:?}
+  A:  {:?}
+  X:  {:?}
+  I1: {:?}
+  I2: {:?}
+  I3: {:?}
+  I4: {:?}
+  I5: {:?}
+  I6: {:?}
 }}",
-      self.accumulator.value()
+      self.accumulator.value(),
+      self.extension.value(),
+      self.indexes[0].value(),
+      self.indexes[1].value(),
+      self.indexes[2].value(),
+      self.indexes[3].value(),
+      self.indexes[4].value(),
+      self.indexes[5].value(),
     )
   }
 }

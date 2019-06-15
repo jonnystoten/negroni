@@ -1,8 +1,8 @@
 use crate::computer::Computer;
 
-use crate::mix;
-use super::Operation;
 
+use super::Operation;
+use crate::mix;
 pub struct AddressTransfer<'a> {
   instruction: &'a mix::Instruction,
 }

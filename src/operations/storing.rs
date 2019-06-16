@@ -23,7 +23,7 @@ impl<'a> Operation for Store<'a> {
         computer.indexes[index].cast_to_word()
       }
       mix::op_codes::STJ => computer.jump_address.cast_to_word(),
-      mix::op_codes::STZ => mix::Word::new(),
+      mix::op_codes::STZ => mix::Word::zero(),
       _ => panic!("unknown store operation {}", self.instruction.operation),
     };
 
@@ -74,7 +74,7 @@ mod tests {
     let tests = [
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::STA,
@@ -86,7 +86,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(1, 5),
           operation: mix::op_codes::STA,
@@ -98,7 +98,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(5, 5),
           operation: mix::op_codes::STA,
@@ -110,7 +110,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 2),
           operation: mix::op_codes::STA,
@@ -122,7 +122,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 3),
           operation: mix::op_codes::STA,
@@ -134,7 +134,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 1),
           operation: mix::op_codes::STA,
@@ -168,7 +168,7 @@ mod tests {
     let tests = [
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::STX,
@@ -180,7 +180,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(1, 5),
           operation: mix::op_codes::STX,
@@ -192,7 +192,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(5, 5),
           operation: mix::op_codes::STX,
@@ -204,7 +204,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 2),
           operation: mix::op_codes::STX,
@@ -216,7 +216,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 3),
           operation: mix::op_codes::STX,
@@ -228,7 +228,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 1),
           operation: mix::op_codes::STX,
@@ -263,7 +263,7 @@ mod tests {
       (
         1,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::ST1,
@@ -276,7 +276,7 @@ mod tests {
       (
         2,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(1, 5),
           operation: mix::op_codes::ST2,
@@ -289,7 +289,7 @@ mod tests {
       (
         3,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(5, 5),
           operation: mix::op_codes::ST3,
@@ -302,7 +302,7 @@ mod tests {
       (
         4,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 2),
           operation: mix::op_codes::ST4,
@@ -315,7 +315,7 @@ mod tests {
       (
         5,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 3),
           operation: mix::op_codes::ST5,
@@ -328,7 +328,7 @@ mod tests {
       (
         6,
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 1),
           operation: mix::op_codes::ST6,
@@ -362,7 +362,7 @@ mod tests {
     let tests = [
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::STJ,
@@ -374,7 +374,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(1, 5),
           operation: mix::op_codes::STJ,
@@ -386,7 +386,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(5, 5),
           operation: mix::op_codes::STJ,
@@ -398,7 +398,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 2),
           operation: mix::op_codes::STJ,
@@ -410,7 +410,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 3),
           operation: mix::op_codes::STJ,
@@ -422,7 +422,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 1),
           operation: mix::op_codes::STJ,
@@ -456,7 +456,7 @@ mod tests {
     let tests = [
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::STZ,
@@ -468,7 +468,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(1, 5),
           operation: mix::op_codes::STZ,
@@ -480,7 +480,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(5, 5),
           operation: mix::op_codes::STZ,
@@ -492,7 +492,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 2),
           operation: mix::op_codes::STZ,
@@ -504,7 +504,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(2, 3),
           operation: mix::op_codes::STZ,
@@ -516,7 +516,7 @@ mod tests {
       ),
       (
         mix::Instruction {
-          address: mix::Address::new(2000),
+          address: mix::Address::from_value(2000),
           index_specification: 0,
           modification: mix::field_spec(0, 1),
           operation: mix::op_codes::STZ,

@@ -32,7 +32,7 @@ impl Instruction {
       op_codes::DIV => Box::new(operations::Division::new(self)),
       op_codes::LDA...op_codes::LDXN => Box::new(operations::Load::new(self)),
       op_codes::STA...op_codes::STZ => Box::new(operations::Store::new(self)),
-      op_codes::ENTA => Box::new(operations::Enter::new(self)),
+      op_codes::ENTA...op_codes::ENTX => Box::new(operations::Enter::new(self)),
       _ => panic!("unknown opcode {}", self.operation),
     }
   }

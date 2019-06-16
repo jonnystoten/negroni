@@ -22,8 +22,8 @@ impl<'a> Operation for Division<'a> {
 
     if computer.accumulator.value().abs() >= word.value().abs() {
       // the values of rA and rX is undefined behaviour (pg. 131) - we'll just zero them
-      computer.accumulator = mix::Word::new();
-      computer.extension = mix::Word::new();
+      computer.accumulator = mix::Word::zero();
+      computer.extension = mix::Word::zero();
       computer.overflow = true;
       return;
     }
@@ -71,7 +71,7 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::DIV,
@@ -100,7 +100,7 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::DIV,
@@ -129,7 +129,7 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::DIV,
@@ -158,7 +158,7 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::DIV,

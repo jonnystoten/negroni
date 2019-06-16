@@ -13,10 +13,17 @@ pub struct Word {
 }
 
 impl Word {
-  pub fn new() -> Word {
+  pub fn zero() -> Word {
     Word {
       bytes: [0; 5],
       sign: Sign::Positive,
+    }
+  }
+
+  pub fn negative_zero() -> Word {
+    Word {
+      bytes: [0; 5],
+      sign: Sign::Negative,
     }
   }
 
@@ -40,7 +47,7 @@ impl Word {
   }
 
   fn from_value_impl(mut value: isize, allow_overflow: bool) -> Word {
-    let mut word = Word::new();
+    let mut word = Word::zero();
 
     if value < 0 {
       word.sign = Sign::Negative;
@@ -91,7 +98,7 @@ impl Word {
   }
 
   pub fn apply_field_spec(&self, spec: u8) -> Word {
-    let mut new_word = Word::new();
+    let mut new_word = Word::zero();
     new_word.sign = Sign::Positive;
 
     let (left, right) = super::decode_field_spec(spec);

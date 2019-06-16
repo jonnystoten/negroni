@@ -60,7 +60,7 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::ADD,
@@ -81,7 +81,7 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::ADD,
@@ -102,15 +102,12 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::ADD,
         },
-        mix::Word {
-          bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Negative,
-        },
+        mix::Word::negative_zero(),
         false,
       ),
       (
@@ -123,15 +120,12 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::ADD,
         },
-        mix::Word {
-          bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Positive,
-        },
+        mix::Word::zero(),
         true,
       ),
     ];
@@ -161,7 +155,7 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::SUB,
@@ -182,15 +176,12 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::SUB,
         },
-        mix::Word {
-          bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Positive,
-        },
+        mix::Word::zero(),
         false,
       ),
       (
@@ -203,15 +194,12 @@ mod tests {
           sign: mix::Sign::Negative,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::SUB,
         },
-        mix::Word {
-          bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Negative,
-        },
+        mix::Word::negative_zero(),
         false,
       ),
       (
@@ -224,15 +212,12 @@ mod tests {
           sign: mix::Sign::Positive,
         },
         mix::Instruction {
-          address: mix::Address::new(1000),
+          address: mix::Address::from_value(1000),
           index_specification: 0,
           modification: mix::field_spec(0, 5),
           operation: mix::op_codes::SUB,
         },
-        mix::Word {
-          bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Negative,
-        },
+        mix::Word::negative_zero(),
         true,
       ),
     ];

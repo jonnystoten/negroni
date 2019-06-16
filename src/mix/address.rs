@@ -7,7 +7,21 @@ pub struct Address {
 }
 
 impl Address {
-  pub fn new(value: isize) -> Address {
+  pub fn zero() -> Address {
+    Address {
+      bytes: [0; 2],
+      sign: Sign::Positive,
+    }
+  }
+
+  pub fn negative_zero() -> Address {
+    Address {
+      bytes: [0; 2],
+      sign: Sign::Negative,
+    }
+  }
+  
+  pub fn from_value(value: isize) -> Address {
     let sign = if value.signum() < 0 {
       Sign::Negative
     } else {

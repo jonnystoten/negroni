@@ -3,6 +3,8 @@ use std::fmt;
 use crate::mix;
 
 pub struct Computer {
+  pub running: bool,
+  pub program_counter: usize,
   pub accumulator: mix::Word,
   pub extension: mix::Word,
   pub indexes: [mix::Address; 6],
@@ -25,6 +27,8 @@ impl Computer {
     }; 6];
 
     Computer {
+      running: false,
+      program_counter: 0,
       accumulator: mix::Word {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
@@ -44,8 +48,25 @@ impl Computer {
     }
   }
 
-  pub fn fetch(&self) -> mix::Instruction {
-    let word = self.memory[0];
+  pub fn start(&mut self) -> () {
+    self.running = true;
+    while self.running {
+      self.fetch_decode_execute();
+      if self.program_counter >= self.memory.len() {
+        self.running = false;
+      }
+    }
+  }
+
+  fn fetch_decode_execute(&mut self) -> () {
+    let instruction = self.fetch();
+    let operation = instruction.decode();
+    operation.execute(self);
+    self.program_counter += 1;
+  }
+
+  fn fetch(&self) -> mix::Instruction {
+    let word = self.memory[self.program_counter];
 
     mix::Instruction::from_word(word)
   }
@@ -72,6 +93,7 @@ impl fmt::Debug for Computer {
       f,
       "\
 Computer {{
+  PC:         {:?}
   rA:         {:?}
   rX:         {:?}
   rI1:        {:?}
@@ -84,6 +106,7 @@ Computer {{
   Overflow:   {:?}
   Comparison: {:?}
 }}",
+      self.program_counter,
       self.accumulator.value(),
       self.extension.value(),
       self.indexes[0].value(),

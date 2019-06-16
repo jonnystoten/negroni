@@ -27,6 +27,7 @@ impl Instruction {
 
   pub fn decode(&self) -> Box<dyn operations::Operation + '_> {
     match self.operation {
+      op_codes::NOP => Box::new(operations::NoOp::new()),
       op_codes::ADD | op_codes::SUB => Box::new(operations::Addition::new(self)),
       op_codes::MUL => Box::new(operations::Multiplication::new(self)),
       op_codes::DIV => Box::new(operations::Division::new(self)),

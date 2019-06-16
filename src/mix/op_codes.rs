@@ -1,3 +1,4 @@
+pub const NOP: u8 = 0;
 pub const ADD: u8 = 1;
 pub const SUB: u8 = 2;
 pub const MUL: u8 = 3;

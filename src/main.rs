@@ -12,9 +12,7 @@ fn main() {
         sign: mix::Sign::Positive,
     };
 
-    let instruction = computer.fetch();
-    let operation = instruction.decode();
-    operation.execute(&mut computer);
+    computer.start();
 
     println!("===MIX COMPUTER===");
     println!("{:?}", computer);

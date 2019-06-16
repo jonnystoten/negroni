@@ -33,6 +33,8 @@ impl Instruction {
       op_codes::DIV => Box::new(operations::Division::new(self)),
       op_codes::LDA...op_codes::LDXN => Box::new(operations::Load::new(self)),
       op_codes::STA...op_codes::STZ => Box::new(operations::Store::new(self)),
+      op_codes::JMP => Box::new(operations::Jump::new(self)),
+      op_codes::JAN...op_codes::JXN => Box::new(operations::RegisterJump::new(self)),
       op_codes::ENTA...op_codes::ENTX => match self.modification {
         0 | 1 => Box::new(operations::Increase::new(self)),
         2 | 3 => Box::new(operations::Enter::new(self)),

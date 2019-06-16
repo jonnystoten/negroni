@@ -58,11 +58,13 @@ impl Computer {
     }
   }
 
-  fn fetch_decode_execute(&mut self) -> () {
+  pub fn fetch_decode_execute(&mut self) -> () {
     let instruction = self.fetch();
     let operation = instruction.decode();
     operation.execute(self);
-    self.program_counter += 1;
+    if operation.should_increment_program_counter() {
+      self.program_counter += 1;
+    }
   }
 
   fn fetch(&self) -> mix::Instruction {

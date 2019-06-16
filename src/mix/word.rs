@@ -1,4 +1,4 @@
-use super::Address;
+use super::{Address, Instruction};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Sign {
@@ -66,6 +66,19 @@ impl Word {
     }
 
     word
+  }
+  
+  pub fn from_instruction(instruction: Instruction) -> Word {
+    Word {
+      sign: instruction.address.sign,
+      bytes: [
+        instruction.address.bytes[0],
+        instruction.address.bytes[1],
+        instruction.index_specification,
+        instruction.modification,
+        instruction.operation,
+      ]
+    }
   }
 
   pub fn fits_in_word(value: isize) -> bool {

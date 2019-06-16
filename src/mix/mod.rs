@@ -2,6 +2,7 @@ mod address;
 mod instruction;
 mod word;
 
+#[allow(dead_code)]
 pub mod op_codes;
 pub use address::Address;
 pub use instruction::Instruction;

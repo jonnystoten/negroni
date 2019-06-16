@@ -63,3 +63,12 @@ pub const INCX: u8 = 55;
 pub const DECX: u8 = 55;
 pub const ENTX: u8 = 55;
 pub const ENNX: u8 = 55;
+
+pub const CMPA: u8 = 56;
+pub const CMP1: u8 = 57;
+pub const CMP2: u8 = 58;
+pub const CMP3: u8 = 59;
+pub const CMP4: u8 = 60;
+pub const CMP5: u8 = 61;
+pub const CMP6: u8 = 62;
+pub const CMPX: u8 = 63;

@@ -9,6 +9,7 @@ pub struct Computer {
   pub jump_address: mix::Address,
   pub memory: [mix::Word; 4000],
   pub overflow: bool,
+  pub comparison: mix::Comparison,
 }
 
 impl Computer {
@@ -39,6 +40,7 @@ impl Computer {
       },
       memory,
       overflow: false,
+      comparison: mix::Comparison::Equal,
     }
   }
 
@@ -70,16 +72,17 @@ impl fmt::Debug for Computer {
       f,
       "\
 Computer {{
-  rA:       {:?}
-  rX:       {:?}
-  rI1:      {:?}
-  rI2:      {:?}
-  rI3:      {:?}
-  rI4:      {:?}
-  rI5:      {:?}
-  rI6:      {:?}
-  rJ:       {:?}
-  Overflow: {:?}
+  rA:         {:?}
+  rX:         {:?}
+  rI1:        {:?}
+  rI2:        {:?}
+  rI3:        {:?}
+  rI4:        {:?}
+  rI5:        {:?}
+  rI6:        {:?}
+  rJ:         {:?}
+  Overflow:   {:?}
+  Comparison: {:?}
 }}",
       self.accumulator.value(),
       self.extension.value(),
@@ -91,6 +94,7 @@ Computer {{
       self.indexes[5].value(),
       self.jump_address.value(),
       self.overflow,
+      self.comparison,
     )
   }
 }

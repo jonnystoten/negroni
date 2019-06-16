@@ -40,6 +40,7 @@ impl Instruction {
           self.modification
         ),
       },
+      op_codes::CMPA...op_codes::CMPX => Box::new(operations::Compare::new(self)),
 
       _ => panic!("unknown opcode {}", self.operation),
     }

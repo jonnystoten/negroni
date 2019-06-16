@@ -30,8 +30,8 @@ impl Computer {
     }; 6];
 
     let mut io_devices: Vec<io::IoDevice> = Vec::with_capacity(21);
-    for _ in 0..8 {
-      io_devices.push(io::TapeUnit::new());
+    for i in 0..8 {
+      io_devices.push(io::TapeUnit::new(&format!("tape{}.dat", i)));
     }
 
     io_devices[3].set_busy();

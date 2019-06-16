@@ -1,45 +1,41 @@
-use std::sync::mpsc;
-use std::sync::{Arc, Condvar, Mutex};
+use std::fs::File;
+use std::io::{Read, Seek, SeekFrom, Write};
 
-use std::thread;
+use super::internal_device::InternalDevice;
+use super::io_device::IoDevice;
+use super::ActualDevice;
 
-use super::{IoDevice, IoMessage};
-
-pub struct TapeUnit<'a> {
-  busy_pair: Arc<(Mutex<bool>, Condvar)>,
-  rx: &'a mpsc::Receiver<IoMessage>,
+pub struct TapeUnit {
+  file: File,
 }
 
-impl<'a> TapeUnit<'a> {
-  pub fn new() -> IoDevice {
-    let (tx, rx) = mpsc::channel::<IoMessage>();
-    let busy_pair = Arc::new((Mutex::new(false), Condvar::new()));
-    let internal_busy_pair = busy_pair.clone();
+impl TapeUnit {
+  pub fn new(filename: &str) -> IoDevice {
+    let file = File::create(filename).unwrap();
 
-    thread::spawn(move || {
-      let td = TapeUnit {
-        busy_pair: internal_busy_pair,
-        rx: &rx,
-      };
+    let tape = TapeUnit { file };
+    InternalDevice::new(Box::new(tape))
+  }
+}
 
-      for received in td.rx {
-        println!("oh hooooo {} {}", received.operation, received.address);
+impl ActualDevice for TapeUnit {
+  fn read(&mut self) -> Vec<u8> {
+    let mut buffer = vec![0; self.block_size()];
+    self.file.read(&mut buffer).unwrap();
 
-        td.set_ready();
-      }
-    });
-
-    IoDevice {
-      block_size: 100,
-      channel: tx,
-      busy_pair,
-    }
+    buffer
   }
 
-  fn set_ready(&self) {
-    let (lock, cvar) = &*self.busy_pair;
-    let mut b = lock.lock().unwrap();
-    *b = false;
-    cvar.notify_all();
+  fn write(&mut self, bytes: &[u8]) {
+    self.file.write(&bytes).unwrap();
+  }
+
+  fn control(&mut self, m: isize) {
+    let to_seek = m * self.block_size() as isize;
+    self.file.seek(SeekFrom::Current(to_seek as i64)).unwrap();
+  }
+
+  fn block_size(&self) -> usize {
+    100
   }
 }

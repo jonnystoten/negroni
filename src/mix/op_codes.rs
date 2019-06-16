@@ -1,5 +1,7 @@
 pub const ADD: u8 = 1;
 pub const SUB: u8 = 2;
+pub const MUL: u8 = 3;
+pub const DIV: u8 = 4;
 
 pub const LDA: u8 = 8;
 pub const LD1: u8 = 9;

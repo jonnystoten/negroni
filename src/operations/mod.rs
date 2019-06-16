@@ -7,6 +7,8 @@ use crate::computer::Computer;
 
 pub use address_transfer::AddressTransfer;
 pub use arithmetic::Addition;
+pub use arithmetic::Multiplication;
+pub use arithmetic::Division;
 pub use loading::Load;
 pub use storing::Store;
 

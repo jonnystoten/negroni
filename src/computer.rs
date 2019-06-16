@@ -47,6 +47,21 @@ impl Computer {
 
     mix::Instruction::from_word(word)
   }
+
+  pub fn get_indexed_address_value(&self, instruction: &mix::Instruction) -> isize {
+    let index = instruction.index_specification as usize;
+    if index > 6 {
+      panic!("index spec out of range: {}", index);
+    }
+
+    let value = instruction.address.value();
+    if index == 0 {
+      return value;
+    }
+
+    let index_value = self.indexes[index - 1].value();
+    value + index_value
+  }
 }
 
 impl fmt::Debug for Computer {
@@ -55,15 +70,16 @@ impl fmt::Debug for Computer {
       f,
       "\
 Computer {{
-  rA:  {:?}
-  rX:  {:?}
-  rI1: {:?}
-  rI2: {:?}
-  rI3: {:?}
-  rI4: {:?}
-  rI5: {:?}
-  rI6: {:?}
-  rJ:  {:?}
+  rA:       {:?}
+  rX:       {:?}
+  rI1:      {:?}
+  rI2:      {:?}
+  rI3:      {:?}
+  rI4:      {:?}
+  rI5:      {:?}
+  rI6:      {:?}
+  rJ:       {:?}
+  Overflow: {:?}
 }}",
       self.accumulator.value(),
       self.extension.value(),
@@ -74,6 +90,7 @@ Computer {{
       self.indexes[4].value(),
       self.indexes[5].value(),
       self.jump_address.value(),
+      self.overflow,
     )
   }
 }

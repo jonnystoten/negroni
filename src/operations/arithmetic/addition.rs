@@ -1,8 +1,8 @@
 use crate::computer::Computer;
 
-use crate::operations::Operation;
-use crate::mix;
 
+use crate::mix;
+use crate::operations::Operation;
 pub struct Addition<'a> {
   instruction: &'a mix::Instruction,
 }
@@ -231,7 +231,7 @@ mod tests {
         },
         mix::Word {
           bytes: [0, 0, 0, 0, 0],
-          sign: mix::Sign::Positive,
+          sign: mix::Sign::Negative,
         },
         true,
       ),

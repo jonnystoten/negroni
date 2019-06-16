@@ -43,7 +43,7 @@ impl Word {
     let mut word = Word::new();
 
     if value < 0 {
-      word.sign = Sign::Positive;
+      word.sign = Sign::Negative;
       value *= -1
     }
 

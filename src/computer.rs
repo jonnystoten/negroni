@@ -1,5 +1,8 @@
 use std::fmt;
+use std::vec::Vec;
 
+use crate::io;
+use crate::io::IoDevice;
 use crate::mix;
 
 pub struct Computer {
@@ -12,6 +15,7 @@ pub struct Computer {
   pub memory: [mix::Word; 4000],
   pub overflow: bool,
   pub comparison: mix::Comparison,
+  pub tape_units: Vec<io::TapeUnit>,
 }
 
 impl Computer {
@@ -25,6 +29,15 @@ impl Computer {
       bytes: [0, 0],
       sign: mix::Sign::Positive,
     }; 6];
+
+    let mut tape_units: Vec<io::TapeUnit> = Vec::with_capacity(8);
+    for _ in 0..8 {
+      tape_units.push(io::TapeUnit::new());
+    }
+
+    tape_units[3].set_busy();
+    tape_units[3].channel().send(io::IoMessage {}).unwrap();
+    tape_units[3].wait_ready();
 
     Computer {
       running: false,
@@ -45,6 +58,7 @@ impl Computer {
       memory,
       overflow: false,
       comparison: mix::Comparison::Equal,
+      tape_units,
     }
   }
 

@@ -6,6 +6,7 @@ mod storing;
 use crate::computer::Computer;
 
 pub use address_transfer::Enter;
+pub use address_transfer::Increase;
 pub use arithmetic::Addition;
 pub use arithmetic::Multiplication;
 pub use arithmetic::Division;

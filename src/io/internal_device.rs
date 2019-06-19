@@ -6,18 +6,15 @@ use std::thread;
 use super::io_device::IoDevice;
 use super::{ActualDevice, IoMessage};
 
-pub struct InternalDevice<'a> {
-  busy_pair: Arc<(Mutex<bool>, Condvar)>,
-  rx: &'a mpsc::Receiver<IoMessage>,
-}
+use crate::mix;
+
+
 
 impl<'a> InternalDevice<'a> {
-  pub fn new(mut actual_device: Box<dyn ActualDevice + Send>) -> IoDevice {
-    let (tx, rx) = mpsc::channel::<IoMessage>();
-    let busy_pair = Arc::new((Mutex::new(false), Condvar::new()));
-    let internal_busy_pair = busy_pair.clone();
-
-    let bs = actual_device.block_size();
+  pub fn start(device: &IoDevice) {
+    let internal_busy_pair = device.busy_pair.clone();
+    let rx = device.rx;
+    let actual_device = device.actual_device;
 
     thread::spawn(move || {
       let td = InternalDevice {
@@ -26,19 +23,18 @@ impl<'a> InternalDevice<'a> {
       };
 
       for received in td.rx {
-        println!("oh hooooo {} {}", received.operation, received.address);
+        match received.operation {
+          mix::op_codes::IN => {
+            let ws = actual_device.read();
+          }
+          _ => panic!("unknown IO operation {}", received.operation),
+        }
 
-        actual_device.write(&[66, 66, 67, 68]);
+        println!("oh hooooo {} {}", received.operation, received.address);
 
         td.set_ready();
       }
     });
-
-    IoDevice {
-      channel: tx,
-      busy_pair,
-      block_size: bs,
-    }
   }
 
   fn set_ready(&self) {

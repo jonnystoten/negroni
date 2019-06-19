@@ -1,6 +1,7 @@
 mod address_transfer;
 mod arithmetic;
 mod comparison;
+mod io;
 mod jump;
 mod loading;
 mod misc;
@@ -11,6 +12,7 @@ use crate::computer::Computer;
 pub use address_transfer::{Enter, Increase};
 pub use arithmetic::{Addition, Division, Multiplication};
 pub use comparison::Compare;
+pub use io::Io;
 pub use jump::{Jump, RegisterJump};
 pub use loading::Load;
 pub use misc::NoOp;

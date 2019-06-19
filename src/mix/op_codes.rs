@@ -32,6 +32,10 @@ pub const STX: u8 = 31;
 pub const STJ: u8 = 32;
 pub const STZ: u8 = 33;
 
+pub const IOC: u8 = 35;
+pub const IN: u8 = 36;
+pub const OUT: u8 = 37;
+
 pub const JMP: u8 = 39;
 pub const JSJ: u8 = 39;
 pub const JOV: u8 = 39;

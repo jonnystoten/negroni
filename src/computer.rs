@@ -34,14 +34,14 @@ impl Computer {
       io_devices.push(io::TapeUnit::new(&format!("tape{}.dat", i)));
     }
 
-    io_devices[3].set_busy();
-    io_devices[3]
-      .send(io::IoMessage {
-        operation: 37,
-        address: 1000,
-      })
-      .unwrap();
-    io_devices[3].wait_ready();
+    // io_devices[3].set_busy();
+    // io_devices[3]
+    //   .send(io::IoMessage {
+    //     operation: 37,
+    //     address: 1000,
+    //   })
+    //   .unwrap();
+    // io_devices[3].wait_ready();
 
     Computer {
       running: false,

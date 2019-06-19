@@ -16,7 +16,7 @@ impl<'a> Compare<'a> {
 impl<'a> Operation for Compare<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
     let address = computer.get_indexed_address_value(self.instruction) as usize;
-    let word = computer.memory[address].apply_field_spec(self.instruction.modification);
+    let word = computer.memory[address].read().apply_field_spec(self.instruction.modification);
 
     let register = match self.instruction.operation {
       mix::op_codes::CMPA => computer.accumulator,
@@ -97,8 +97,8 @@ mod tests {
     for (acc_before, instruction, expected_cmp) in &tests {
       let mut computer = Computer::new();
       computer.accumulator = *acc_before;
-      computer.memory[0] = mix::Word::zero();
-      computer.memory[2000] = mix::Word::from_value(10);
+      computer.memory[0].write(mix::Word::zero());
+      computer.memory[2000].write(mix::Word::from_value(10));
 
       instruction.decode().execute(&mut computer);
 
@@ -154,8 +154,8 @@ mod tests {
     for (ext_before, instruction, expected_cmp) in &tests {
       let mut computer = Computer::new();
       computer.extension = *ext_before;
-      computer.memory[0] = mix::Word::zero();
-      computer.memory[2000] = mix::Word::from_value(10);
+      computer.memory[0].write(mix::Word::zero());
+      computer.memory[2000].write(mix::Word::from_value(10));
 
       instruction.decode().execute(&mut computer);
 
@@ -237,8 +237,8 @@ mod tests {
     for (index, reg_before, instruction, expected_cmp) in &tests {
       let mut computer = Computer::new();
       computer.indexes[(index - 1) as usize] = *reg_before;
-      computer.memory[0] = mix::Word::zero();
-      computer.memory[2000] = mix::Word::from_value(10);
+      computer.memory[0].write(mix::Word::zero());
+      computer.memory[2000].write(mix::Word::from_value(10));
 
       instruction.decode().execute(&mut computer);
 

@@ -1,8 +1,36 @@
+use std::sync::Arc;
 use std::fmt;
 use std::vec::Vec;
 
+use std::sync::RwLock;
+
 use crate::io;
 use crate::mix;
+
+pub struct MemoryCell {
+  lock: RwLock<mix::Word>,
+}
+
+impl MemoryCell {
+  fn new(word: mix::Word) -> MemoryCell {
+    MemoryCell {
+      lock: RwLock::new(word)
+    }
+  }
+  
+  pub fn read(&self) -> mix::Word {
+    *self.lock.read().unwrap()
+  }
+  
+  pub fn write(&self, word: mix::Word) {
+    let mut mem = self.lock.write().unwrap();
+    *mem = word;
+  }
+}
+
+pub struct Memory {
+  memory: Vec<MemoryCell>,
+}
 
 pub struct Computer {
   pub running: bool,
@@ -11,7 +39,7 @@ pub struct Computer {
   pub extension: mix::Word,
   pub indexes: [mix::Address; 6],
   pub jump_address: mix::Address,
-  pub memory: [mix::Word; 4000],
+  pub memory: Arc<Vec<MemoryCell>>,
   pub overflow: bool,
   pub comparison: mix::Comparison,
   pub io_devices: Vec<io::IoDevice>,
@@ -19,10 +47,13 @@ pub struct Computer {
 
 impl Computer {
   pub fn new() -> Computer {
-    let memory = [mix::Word {
+    let raw_memory = [mix::Word {
       bytes: [0, 0, 0, 0, 0],
       sign: mix::Sign::Positive,
     }; 4000];
+    
+    let memory: Vec<MemoryCell> = raw_memory.iter().map(|x| MemoryCell::new(*x)).collect();
+    let memory = Arc::new(memory);
 
     let indexes = [mix::Address {
       bytes: [0, 0],
@@ -43,7 +74,7 @@ impl Computer {
     //   .unwrap();
     // io_devices[3].wait_ready();
 
-    Computer {
+    let computer = Computer {
       running: false,
       program_counter: 0,
       accumulator: mix::Word {
@@ -63,7 +94,13 @@ impl Computer {
       overflow: false,
       comparison: mix::Comparison::Equal,
       io_devices,
+    };
+    
+    for io in computer.io_devices.iter() {
+      io.start(&computer);
     }
+    
+    computer
   }
 
   pub fn start(&mut self) -> () {
@@ -86,7 +123,7 @@ impl Computer {
   }
 
   fn fetch(&self) -> mix::Instruction {
-    let word = self.memory[self.program_counter];
+    let word = self.memory[self.program_counter].read();
 
     mix::Instruction::from_word(word)
   }

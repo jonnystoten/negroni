@@ -134,7 +134,7 @@ mod tests {
       modification: 0,
       operation: mix::op_codes::JMP,
     };
-    computer.memory[100] = mix::Word::from_instruction(instruction);
+    computer.memory[100].write(mix::Word::from_instruction(instruction));
 
     computer.fetch_decode_execute();
 
@@ -153,7 +153,7 @@ mod tests {
       modification: 1,
       operation: mix::op_codes::JSJ,
     };
-    computer.memory[100] = mix::Word::from_instruction(instruction);
+    computer.memory[100].write(mix::Word::from_instruction(instruction));
 
     computer.fetch_decode_execute();
 
@@ -176,7 +176,7 @@ mod tests {
         modification: 2,
         operation: mix::op_codes::JOV,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -200,7 +200,7 @@ mod tests {
         modification: 3,
         operation: mix::op_codes::JNOV,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -228,7 +228,7 @@ mod tests {
         modification: 4,
         operation: mix::op_codes::JL,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -255,7 +255,7 @@ mod tests {
         modification: 5,
         operation: mix::op_codes::JE,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -282,7 +282,7 @@ mod tests {
         modification: 6,
         operation: mix::op_codes::JG,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -309,7 +309,7 @@ mod tests {
         modification: 7,
         operation: mix::op_codes::JGE,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -336,7 +336,7 @@ mod tests {
         modification: 8,
         operation: mix::op_codes::JNE,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -363,7 +363,7 @@ mod tests {
         modification: 9,
         operation: mix::op_codes::JLE,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -390,7 +390,7 @@ mod tests {
         modification: 0,
         operation: mix::op_codes::JAN,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -417,7 +417,7 @@ mod tests {
         modification: 1,
         operation: mix::op_codes::JAZ,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -444,7 +444,7 @@ mod tests {
         modification: 2,
         operation: mix::op_codes::JAP,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -471,7 +471,7 @@ mod tests {
         modification: 3,
         operation: mix::op_codes::JANN,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -498,7 +498,7 @@ mod tests {
         modification: 4,
         operation: mix::op_codes::JANZ,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -525,7 +525,7 @@ mod tests {
         modification: 5,
         operation: mix::op_codes::JANP,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -552,7 +552,7 @@ mod tests {
         modification: 0,
         operation: mix::op_codes::JXN,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -579,7 +579,7 @@ mod tests {
         modification: 1,
         operation: mix::op_codes::JXZ,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -606,7 +606,7 @@ mod tests {
         modification: 2,
         operation: mix::op_codes::JXP,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -633,7 +633,7 @@ mod tests {
         modification: 3,
         operation: mix::op_codes::JXNN,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -660,7 +660,7 @@ mod tests {
         modification: 4,
         operation: mix::op_codes::JXNZ,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -687,7 +687,7 @@ mod tests {
         modification: 5,
         operation: mix::op_codes::JXNP,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -714,7 +714,7 @@ mod tests {
         modification: 0,
         operation: mix::op_codes::J1N,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -741,7 +741,7 @@ mod tests {
         modification: 1,
         operation: mix::op_codes::J2Z,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -768,7 +768,7 @@ mod tests {
         modification: 2,
         operation: mix::op_codes::J3P,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -795,7 +795,7 @@ mod tests {
         modification: 3,
         operation: mix::op_codes::J4NN,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -822,7 +822,7 @@ mod tests {
         modification: 4,
         operation: mix::op_codes::J5NZ,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 
@@ -849,7 +849,7 @@ mod tests {
         modification: 5,
         operation: mix::op_codes::J6NP,
       };
-      computer.memory[100] = mix::Word::from_instruction(instruction);
+      computer.memory[100].write(mix::Word::from_instruction(instruction));
 
       computer.fetch_decode_execute();
 

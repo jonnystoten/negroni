@@ -42,7 +42,7 @@ impl<'a> Operation for Store<'a> {
     println!("num_bytes: {:?}", num_bytes);
 
     let bytes = get_bytes_to_store(&register, num_bytes);
-    let mut word = computer.memory[address as usize];
+    let mut word = computer.memory[address as usize].read();
     if left == 0 {
       word.sign = register.sign;
       left += 1;
@@ -54,7 +54,7 @@ impl<'a> Operation for Store<'a> {
       word.bytes[left as usize + i - 1] = value;
     }
 
-    computer.memory[address as usize] = word;
+    computer.memory[address as usize].write(word);
   }
 }
 
@@ -148,10 +148,10 @@ mod tests {
 
     for (instruction, expected_mem) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
-      };
+      });
       computer.accumulator = mix::Word {
         bytes: [6, 7, 8, 9, 0],
         sign: mix::Sign::Positive,
@@ -159,7 +159,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.memory[2000], *expected_mem);
+      assert_eq!(computer.memory[2000].read(), *expected_mem);
     }
   }
 
@@ -242,10 +242,10 @@ mod tests {
 
     for (instruction, expected_mem) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
-      };
+      });
       computer.extension = mix::Word {
         bytes: [6, 7, 8, 9, 0],
         sign: mix::Sign::Positive,
@@ -253,7 +253,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.memory[2000], *expected_mem);
+      assert_eq!(computer.memory[2000].read(), *expected_mem);
     }
   }
 
@@ -342,10 +342,10 @@ mod tests {
 
     for (index, instruction, expected_mem) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
-      };
+      });
       computer.indexes[(index - 1) as usize] = mix::Address {
         bytes: [6, 7],
         sign: mix::Sign::Positive,
@@ -353,7 +353,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.memory[2000], *expected_mem);
+      assert_eq!(computer.memory[2000].read(), *expected_mem);
     }
   }
 
@@ -436,10 +436,10 @@ mod tests {
 
     for (instruction, expected_mem) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
-      };
+      });
       computer.jump_address = mix::Address {
         bytes: [6, 7],
         sign: mix::Sign::Positive,
@@ -447,7 +447,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.memory[2000], *expected_mem);
+      assert_eq!(computer.memory[2000].read(), *expected_mem);
     }
   }
 
@@ -530,10 +530,10 @@ mod tests {
 
     for (instruction, expected_mem) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
-      };
+      });
       computer.jump_address = mix::Address {
         bytes: [6, 7],
         sign: mix::Sign::Positive,
@@ -541,7 +541,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.memory[2000], *expected_mem);
+      assert_eq!(computer.memory[2000].read(), *expected_mem);
     }
   }
 }

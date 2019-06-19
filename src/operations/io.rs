@@ -39,7 +39,7 @@ mod tests {
     let mut computer = Computer::new();
 
     for i in 0..100 {
-      computer.memory[1000 + i] = mix::Word::from_value(i as isize);
+      computer.memory[1000 + i].write(mix::Word::from_value(i as isize));
     }
 
     let instructions = [
@@ -68,7 +68,7 @@ mod tests {
     }
 
     for i in 0..100 {
-      assert_eq!(computer.memory[2000 + i], mix::Word::from_value(i as isize));
+      assert_eq!(computer.memory[2000 + i].read(), mix::Word::from_value(i as isize));
     }
   }
 }

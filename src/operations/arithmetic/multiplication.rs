@@ -17,7 +17,7 @@ impl<'a> Operation for Multiplication<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
     let address = self.instruction.address.value() as usize;
 
-    let word = computer.memory[address];
+    let word = computer.memory[address].read();
     let word = word.apply_field_spec(self.instruction.modification);
 
     let sign = if word.sign == computer.accumulator.sign {
@@ -122,7 +122,7 @@ mod tests {
     for (prev_acc, prev_mem, instruction, expected_acc, expected_ext) in &tests {
       let mut computer = Computer::new();
       computer.accumulator = *prev_acc;
-      computer.memory[1000] = *prev_mem;
+      computer.memory[1000].write(*prev_mem);
 
       instruction.decode().execute(&mut computer);
 

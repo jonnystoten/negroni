@@ -10,7 +10,7 @@ use crate::mix;
 pub struct IoDevice {
   pub busy_pair: Arc<(Mutex<bool>, Condvar)>,
   pub channel: mpsc::Sender<IoMessage>,
-  pub set_computer: mpsc::Sender<Arc<computer::Computer>>,
+  pub set_computer: mpsc::Sender<Arc<Vec<computer::MemoryCell>>>,
   pub block_size: usize,
 }
 
@@ -34,7 +34,7 @@ impl<'a> InternalDevice<'a> {
 impl IoDevice {
   pub fn new(mut actual_device: Box<dyn ActualDevice + Send>) -> IoDevice {
     let (tx, rx) = mpsc::channel::<IoMessage>();
-    let (start_tx, start_rx) = mpsc::channel::<Arc<computer::Computer>>();
+    let (start_tx, start_rx) = mpsc::channel::<Arc<Vec<computer::MemoryCell>>>();
     let busy_pair = Arc::new((Mutex::new(false), Condvar::new()));
     let internal_busy_pair = busy_pair.clone();
 
@@ -45,17 +45,29 @@ impl IoDevice {
         busy_pair: internal_busy_pair,
         rx: &rx,
       };
-      
-      let c = &start_rx.recv().unwrap();
+
+      let m = &match start_rx.recv() {
+        Ok(m) => m,
+        Err(err) => {
+          println!("{:?}", err);
+          panic!(err);
+        }
+      };
 
       for received in td.rx {
         println!("oh hooooo {} {}", received.operation, received.address);
 
         match received.operation {
-          mix::op_codes::IN => {}
+          mix::op_codes::IN => {
+            let words = actual_device.read();
+            for (index, word) in words.iter().enumerate() {
+              m[index + received.address as usize].write(*word);
+            }
+          }
+          mix::op_codes::OUT => {}
+          mix::op_codes::IOC => {}
           _ => panic!("unknown IO operation {}", received.operation),
         }
-
 
         td.set_ready();
       }
@@ -69,12 +81,9 @@ impl IoDevice {
     }
   }
 
-  pub fn start(&self, computer: *const computer::Computer) {
-    unsafe {
-      let c = *computer;
-      let arc = Arc::new(c);
-      self.set_computer.send(arc).unwrap();
-    }
+  pub fn start(&self, computer: &computer::Computer) {
+    let m = computer.memory.clone();
+    self.set_computer.send(m).unwrap();
   }
 
   pub fn busy(&self) -> bool {

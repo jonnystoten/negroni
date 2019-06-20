@@ -1,6 +1,6 @@
-use std::sync::Arc;
+
 use std::fmt;
-use std::vec::Vec;
+use std::sync::Arc;
 
 use std::sync::RwLock;
 
@@ -14,22 +14,18 @@ pub struct MemoryCell {
 impl MemoryCell {
   fn new(word: mix::Word) -> MemoryCell {
     MemoryCell {
-      lock: RwLock::new(word)
+      lock: RwLock::new(word),
     }
   }
-  
+
   pub fn read(&self) -> mix::Word {
-    *self.lock.read().unwrap()
+    *self.lock.try_read().unwrap()
   }
-  
+
   pub fn write(&self, word: mix::Word) {
-    let mut mem = self.lock.write().unwrap();
+    let mut mem = self.lock.try_write().unwrap();
     *mem = word;
   }
-}
-
-pub struct Memory {
-  memory: Vec<MemoryCell>,
 }
 
 pub struct Computer {
@@ -51,7 +47,7 @@ impl Computer {
       bytes: [0, 0, 0, 0, 0],
       sign: mix::Sign::Positive,
     }; 4000];
-    
+
     let memory: Vec<MemoryCell> = raw_memory.iter().map(|x| MemoryCell::new(*x)).collect();
     let memory = Arc::new(memory);
 
@@ -64,15 +60,6 @@ impl Computer {
     for i in 0..8 {
       io_devices.push(io::TapeUnit::new(&format!("tape{}.dat", i)));
     }
-
-    // io_devices[3].set_busy();
-    // io_devices[3]
-    //   .send(io::IoMessage {
-    //     operation: 37,
-    //     address: 1000,
-    //   })
-    //   .unwrap();
-    // io_devices[3].wait_ready();
 
     let computer = Computer {
       running: false,
@@ -95,11 +82,11 @@ impl Computer {
       comparison: mix::Comparison::Equal,
       io_devices,
     };
-    
+
     for io in computer.io_devices.iter() {
       io.start(&computer);
     }
-    
+
     computer
   }
 

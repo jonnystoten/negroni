@@ -64,8 +64,15 @@ impl IoDevice {
               m[index + received.address as usize].write(*word);
             }
           }
-          mix::op_codes::OUT => {}
-          mix::op_codes::IOC => {}
+          mix::op_codes::OUT => {
+            let words: Vec<mix::Word> = (0..actual_device.block_size())
+              .map(|index| m[index + received.address as usize].read())
+              .collect();
+            actual_device.write(&words);
+          }
+          mix::op_codes::IOC => {
+            actual_device.control(received.address);
+          }
           _ => panic!("unknown IO operation {}", received.operation),
         }
 

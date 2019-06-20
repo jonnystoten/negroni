@@ -67,8 +67,16 @@ mod tests {
       instruction.decode().execute(&mut computer);
     }
 
+    // TODO: replace this with a JBUS when it's implemented
+    for io in computer.io_devices {
+      io.wait_ready();
+    }
+
     for i in 0..100 {
-      assert_eq!(computer.memory[2000 + i].read(), mix::Word::from_value(i as isize));
+      assert_eq!(
+        computer.memory[2000 + i].read(),
+        mix::Word::from_value(i as isize)
+      );
     }
   }
 }

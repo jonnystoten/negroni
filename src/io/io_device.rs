@@ -2,15 +2,15 @@ use std::sync::mpsc;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 
-use super::{ActualDevice, IoMessage};
-
+use super::{ActualDevice, IoMessage, SlimComputer};
 
 use crate::computer;
 use crate::mix;
+
 pub struct IoDevice {
   pub busy_pair: Arc<(Mutex<bool>, Condvar)>,
   pub channel: mpsc::Sender<IoMessage>,
-  pub set_computer: mpsc::Sender<Arc<Vec<computer::MemoryCell>>>,
+  pub set_computer: mpsc::Sender<SlimComputer>,
   pub block_size: usize,
 }
 
@@ -28,13 +28,10 @@ impl<'a> InternalDevice<'a> {
   }
 }
 
-// unsafe impl std::marker::Send for computer::Computer { }
-
-
 impl IoDevice {
   pub fn new(mut actual_device: Box<dyn ActualDevice + Send>) -> IoDevice {
     let (tx, rx) = mpsc::channel::<IoMessage>();
-    let (start_tx, start_rx) = mpsc::channel::<Arc<Vec<computer::MemoryCell>>>();
+    let (start_tx, start_rx) = mpsc::channel::<SlimComputer>();
     let busy_pair = Arc::new((Mutex::new(false), Condvar::new()));
     let internal_busy_pair = busy_pair.clone();
 
@@ -46,32 +43,26 @@ impl IoDevice {
         rx: &rx,
       };
 
-      let m = &match start_rx.recv() {
-        Ok(m) => m,
-        Err(err) => {
-          println!("{:?}", err);
-          panic!(err);
-        }
-      };
+      let computer = &start_rx.recv().unwrap();
 
       for received in td.rx {
         println!("oh hooooo {} {}", received.operation, received.address);
 
         match received.operation {
           mix::op_codes::IN => {
-            let words = actual_device.read();
+            let words = actual_device.read(computer);
             for (index, word) in words.iter().enumerate() {
-              m[index + received.address as usize].write(*word);
+              computer.memory[index + received.address as usize].write(*word);
             }
           }
           mix::op_codes::OUT => {
             let words: Vec<mix::Word> = (0..actual_device.block_size())
-              .map(|index| m[index + received.address as usize].read())
+              .map(|index| computer.memory[index + received.address as usize].read())
               .collect();
-            actual_device.write(&words);
+            actual_device.write(&words, computer);
           }
           mix::op_codes::IOC => {
-            actual_device.control(received.address);
+            actual_device.control(received.address, computer);
           }
           _ => panic!("unknown IO operation {}", received.operation),
         }
@@ -89,8 +80,9 @@ impl IoDevice {
   }
 
   pub fn start(&self, computer: &computer::Computer) {
-    let m = computer.memory.clone();
-    self.set_computer.send(m).unwrap();
+    let memory = computer.memory.clone();
+    let extension = computer.extension.clone();
+    self.set_computer.send(SlimComputer {memory, extension}).unwrap();
   }
 
   pub fn busy(&self) -> bool {

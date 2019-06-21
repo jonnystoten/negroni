@@ -30,7 +30,7 @@ impl<'a> Operation for Enter<'a> {
         computer.accumulator = word;
       }
       mix::op_codes::ENTX => {
-        computer.extension = word;
+        computer.extension.write(word);
       }
       mix::op_codes::ENT1...mix::op_codes::ENT6 => {
         let index = (self.instruction.operation - mix::op_codes::ENT1) as usize;
@@ -201,7 +201,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext)
+      assert_eq!(computer.extension.read(), *expected_ext)
     }
   }
 
@@ -438,7 +438,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext)
+      assert_eq!(computer.extension.read(), *expected_ext)
     }
   }
 

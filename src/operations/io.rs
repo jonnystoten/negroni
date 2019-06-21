@@ -79,4 +79,46 @@ mod tests {
       );
     }
   }
+
+  #[test]
+  fn test_disk_roundtrip() {
+    let mut computer = Computer::new();
+
+    for i in 0..100 {
+      computer.memory[1000 + i].write(mix::Word::from_value(i as isize));
+    }
+    
+    computer.extension.write(mix::Word::from_value(500));
+
+    let instructions = [
+      mix::Instruction {
+        address: mix::Address::from_value(1000),
+        index_specification: 0,
+        modification: 11,
+        operation: mix::op_codes::OUT,
+      },
+      mix::Instruction {
+        address: mix::Address::from_value(2000),
+        index_specification: 0,
+        modification: 11,
+        operation: mix::op_codes::IN,
+      },
+    ];
+
+    for instruction in instructions.iter() {
+      instruction.decode().execute(&mut computer);
+    }
+
+    // TODO: replace this with a JBUS when it's implemented
+    for io in computer.io_devices {
+      io.wait_ready();
+    }
+
+    for i in 0..100 {
+      assert_eq!(
+        computer.memory[2000 + i].read(),
+        mix::Word::from_value(i as isize)
+      );
+    }
+  }
 }

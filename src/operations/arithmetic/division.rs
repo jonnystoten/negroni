@@ -23,12 +23,12 @@ impl<'a> Operation for Division<'a> {
     if computer.accumulator.value().abs() >= word.value().abs() {
       // the values of rA and rX is undefined behaviour (pg. 131) - we'll just zero them
       computer.accumulator = mix::Word::zero();
-      computer.extension = mix::Word::zero();
+      computer.extension.write(mix::Word::zero());
       computer.overflow = true;
       return;
     }
 
-    let rax = computer.accumulator.value() * 1073741824 + computer.extension.value().abs();
+    let rax = computer.accumulator.value() * 1073741824 + computer.extension.read().value().abs();
 
     let sign = if word.sign == computer.accumulator.sign {
       mix::Sign::Positive
@@ -46,7 +46,7 @@ impl<'a> Operation for Division<'a> {
     new_ext.sign = computer.accumulator.sign;
 
     computer.accumulator = new_acc;
-    computer.extension = new_ext;
+    computer.extension.write(new_ext);
   }
 }
 
@@ -180,13 +180,13 @@ mod tests {
     {
       let mut computer = Computer::new();
       computer.accumulator = *prev_acc;
-      computer.extension = *prev_ext;
+      computer.extension.write(*prev_ext);
       computer.memory[1000].write(*prev_mem);
 
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.accumulator, *expected_acc);
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
       assert_eq!(computer.overflow, *expected_ov);
     }
   }

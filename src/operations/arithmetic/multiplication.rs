@@ -37,7 +37,7 @@ impl<'a> Operation for Multiplication<'a> {
     new_ext.sign = sign;
 
     computer.accumulator = new_acc;
-    computer.extension = new_ext;
+    computer.extension.write(new_ext);
   }
 }
 
@@ -127,7 +127,7 @@ mod tests {
       instruction.decode().execute(&mut computer);
 
       assert_eq!(computer.accumulator, *expected_acc);
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
     }
   }
 }

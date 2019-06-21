@@ -56,7 +56,7 @@ impl<'a> Operation for RegisterJump<'a> {
 
     let value = match self.instruction.operation {
       mix::op_codes::JAN => computer.accumulator.value(),
-      mix::op_codes::JXN => computer.extension.value(),
+      mix::op_codes::JXN => computer.extension.read().value(),
       mix::op_codes::J1N...mix::op_codes::J6N => {
         let index = (self.instruction.operation - mix::op_codes::J1N) as usize;
         computer.indexes[index].value()
@@ -544,7 +544,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),
@@ -571,7 +571,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),
@@ -598,7 +598,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),
@@ -625,7 +625,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),
@@ -652,7 +652,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),
@@ -679,7 +679,7 @@ mod tests {
     for (ext_before, expected_pc) in &tests {
       let mut computer = Computer::new();
       computer.program_counter = 100;
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
 
       let instruction = mix::Instruction {
         address: mix::Address::from_value(1000),

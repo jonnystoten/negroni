@@ -17,7 +17,7 @@ impl<'a> Operation for Store<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
     let register = match self.instruction.operation {
       mix::op_codes::STA => computer.accumulator,
-      mix::op_codes::STX => computer.extension,
+      mix::op_codes::STX => computer.extension.read(),
       mix::op_codes::ST1...mix::op_codes::ST6 => {
         let index = (self.instruction.operation - mix::op_codes::ST1) as usize;
         computer.indexes[index].cast_to_word()
@@ -246,10 +246,10 @@ mod tests {
         bytes: [1, 2, 3, 4, 5],
         sign: mix::Sign::Negative,
       });
-      computer.extension = mix::Word {
+      computer.extension.write(mix::Word {
         bytes: [6, 7, 8, 9, 0],
         sign: mix::Sign::Positive,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 

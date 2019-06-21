@@ -32,7 +32,7 @@ pub struct Computer {
   pub running: bool,
   pub program_counter: usize,
   pub accumulator: mix::Word,
-  pub extension: mix::Word,
+  pub extension: Arc<MemoryCell>,
   pub indexes: [mix::Address; 6],
   pub jump_address: mix::Address,
   pub memory: Arc<Vec<MemoryCell>>,
@@ -60,6 +60,9 @@ impl Computer {
     for i in 0..8 {
       io_devices.push(io::TapeUnit::new(&format!("tape{}.dat", i)));
     }
+    for i in 8..16 {
+      io_devices.push(io::DiskUnit::new(&format!("disk{}.dat", i)));
+    }
 
     let computer = Computer {
       running: false,
@@ -68,10 +71,10 @@ impl Computer {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
       },
-      extension: mix::Word {
+      extension: Arc::new(MemoryCell::new(mix::Word {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
-      },
+      })),
       indexes,
       jump_address: mix::Address {
         bytes: [0, 0],
@@ -152,7 +155,7 @@ Computer {{
 }}",
       self.program_counter,
       self.accumulator.value(),
-      self.extension.value(),
+      self.extension.read().value(),
       self.indexes[0].value(),
       self.indexes[1].value(),
       self.indexes[2].value(),

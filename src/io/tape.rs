@@ -2,7 +2,7 @@ use std::fs::{File, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
 
 use super::io_device::IoDevice;
-use super::ActualDevice;
+use super::{ActualDevice, SlimComputer};
 
 use crate::mix;
 
@@ -36,19 +36,19 @@ impl TapeUnit {
 }
 
 impl ActualDevice for TapeUnit {
-  fn read(&mut self) -> Vec<mix::Word> {
+  fn read(&mut self, _computer: &SlimComputer) -> Vec<mix::Word> {
     let mut buffer = vec![0; TapeUnit::word_size()];
     self.file.read(&mut buffer).unwrap();
     bincode::deserialize(&buffer).unwrap()
   }
 
-  fn write(&mut self, words: &[mix::Word]) {
+  fn write(&mut self, words: &[mix::Word], _computer: &SlimComputer) {
     bincode::serialize_into(&self.file, words).unwrap();
     println!("done write");
     println!("new pos: {}", self.file.seek(SeekFrom::Current(0)).unwrap());
   }
 
-  fn control(&mut self, m: isize) {
+  fn control(&mut self, m: isize, _computer: &SlimComputer) {
     println!(
       "current pos: {}",
       self.file.seek(SeekFrom::Current(0)).unwrap()

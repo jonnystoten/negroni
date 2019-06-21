@@ -20,7 +20,7 @@ impl<'a> Operation for Compare<'a> {
 
     let register = match self.instruction.operation {
       mix::op_codes::CMPA => computer.accumulator,
-      mix::op_codes::CMPX => computer.extension,
+      mix::op_codes::CMPX => computer.extension.read(),
       mix::op_codes::CMP1...mix::op_codes::CMP6 => {
         let index = (self.instruction.operation - mix::op_codes::CMP1) as usize;
         computer.indexes[index].cast_to_word()
@@ -153,7 +153,7 @@ mod tests {
 
     for (ext_before, instruction, expected_cmp) in &tests {
       let mut computer = Computer::new();
-      computer.extension = *ext_before;
+      computer.extension.write(*ext_before);
       computer.memory[0].write(mix::Word::zero());
       computer.memory[2000].write(mix::Word::from_value(10));
 

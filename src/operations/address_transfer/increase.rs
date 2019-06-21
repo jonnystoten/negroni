@@ -43,7 +43,7 @@ impl<'a> Operation for Increase<'a> {
         computer.accumulator = result;
       }
       mix::op_codes::INCX => {
-        let sum = computer.extension.value() + value;
+        let sum = computer.extension.read().value() + value;
 
         let mut result = if mix::Word::fits_in_word(sum) {
           mix::Word::from_value(sum)
@@ -54,10 +54,10 @@ impl<'a> Operation for Increase<'a> {
 
         if sum == 0 {
           // keep the sign unchanged (pg. 131)
-          result.sign = computer.extension.sign;
+          result.sign = computer.extension.read().sign;
         }
 
-        computer.extension = result;
+        computer.extension.write(result);
       }
       mix::op_codes::INC1...mix::op_codes::INC6 => {
         let index = (self.instruction.operation - mix::op_codes::INC1) as usize;
@@ -136,11 +136,11 @@ mod tests {
 
     for (instruction, expected_ext) in &tests {
       let mut computer = Computer::new();
-      computer.extension = mix::Word::from_value(1000);
+      computer.extension.write(mix::Word::from_value(1000));
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext)
+      assert_eq!(computer.extension.read(), *expected_ext)
     }
   }
 
@@ -281,11 +281,11 @@ mod tests {
 
     for (instruction, expected_ext) in &tests {
       let mut computer = Computer::new();
-      computer.extension = mix::Word::from_value(1000);
+      computer.extension.write(mix::Word::from_value(1000));
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext)
+      assert_eq!(computer.extension.read(), *expected_ext)
     }
   }
 

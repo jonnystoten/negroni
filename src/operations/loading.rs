@@ -31,7 +31,7 @@ impl<'a> Operation for Load<'a> {
         computer.accumulator = word;
       }
       mix::op_codes::LDX | mix::op_codes::LDXN => {
-        computer.extension = word;
+        computer.extension.write(word);
       }
       mix::op_codes::LD1...mix::op_codes::LD6 => {
         let index = (self.instruction.operation - mix::op_codes::LD1) as usize;
@@ -244,7 +244,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
     }
   }
 
@@ -544,7 +544,7 @@ mod tests {
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
     }
   }
 

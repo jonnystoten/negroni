@@ -1,8 +1,5 @@
-mod computer;
-
-mod io;
-mod mix;
-mod operations;
+use negroni::mix;
+use negroni::computer;
 
 fn main() {
     let mut computer = computer::Computer::new();

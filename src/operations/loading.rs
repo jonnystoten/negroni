@@ -17,7 +17,7 @@ impl<'a> Operation for Load<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
     let address = self.instruction.address.value() as usize;
 
-    let word = computer.memory[address];
+    let word = computer.memory[address].read();
     let mut word = word.apply_field_spec(self.instruction.modification);
 
     if mix::op_codes::LDAN <= self.instruction.operation
@@ -31,7 +31,7 @@ impl<'a> Operation for Load<'a> {
         computer.accumulator = word;
       }
       mix::op_codes::LDX | mix::op_codes::LDXN => {
-        computer.extension = word;
+        computer.extension.write(word);
       }
       mix::op_codes::LD1...mix::op_codes::LD6 => {
         let index = (self.instruction.operation - mix::op_codes::LD1) as usize;
@@ -138,10 +138,10 @@ mod tests {
 
     for (instruction, expected_acc) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 14, 3, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 
@@ -237,14 +237,14 @@ mod tests {
 
     for (instruction, expected_ext) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 14, 3, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
     }
   }
 
@@ -333,10 +333,10 @@ mod tests {
 
     for (index, instruction, expected_reg) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [0, 0, 0, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 
@@ -435,10 +435,10 @@ mod tests {
 
     for (instruction, expected_acc) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 14, 3, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 
@@ -537,14 +537,14 @@ mod tests {
 
     for (instruction, expected_ext) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [1, 14, 3, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 
-      assert_eq!(computer.extension, *expected_ext);
+      assert_eq!(computer.extension.read(), *expected_ext);
     }
   }
 
@@ -633,10 +633,10 @@ mod tests {
 
     for (index, instruction, expected_reg) in &tests {
       let mut computer = Computer::new();
-      computer.memory[2000] = mix::Word {
+      computer.memory[2000].write(mix::Word {
         bytes: [0, 0, 0, 5, 4],
         sign: mix::Sign::Negative,
-      };
+      });
 
       instruction.decode().execute(&mut computer);
 

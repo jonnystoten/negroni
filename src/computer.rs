@@ -1,42 +1,99 @@
-use std::fmt;
 
+use std::fmt;
+use std::fs;
+
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use std::sync::RwLock;
+
+use dirs;
+
+use crate::io;
 use crate::mix;
+
+pub struct MemoryCell {
+  lock: RwLock<mix::Word>,
+}
+
+impl MemoryCell {
+  fn new(word: mix::Word) -> MemoryCell {
+    MemoryCell {
+      lock: RwLock::new(word),
+    }
+  }
+
+  pub fn read(&self) -> mix::Word {
+    *self.lock.try_read().unwrap()
+  }
+
+  pub fn write(&self, word: mix::Word) {
+    let mut mem = self.lock.try_write().unwrap();
+    *mem = word;
+  }
+}
+
+fn make_io_path(filename: &str) -> PathBuf {
+  let home = dirs::home_dir().unwrap();
+  let mut io_dir = home.join(".negroni/io");
+  if cfg!(test) {
+    io_dir = io_dir.join("test");
+  }
+  fs::create_dir_all(&io_dir).unwrap();
+
+  io_dir.join(filename)
+}
 
 pub struct Computer {
   pub running: bool,
   pub program_counter: usize,
   pub accumulator: mix::Word,
-  pub extension: mix::Word,
+  pub extension: Arc<MemoryCell>,
   pub indexes: [mix::Address; 6],
   pub jump_address: mix::Address,
-  pub memory: [mix::Word; 4000],
+  pub memory: Arc<Vec<MemoryCell>>,
   pub overflow: bool,
   pub comparison: mix::Comparison,
+  pub io_devices: Vec<io::IoDevice>,
 }
 
 impl Computer {
   pub fn new() -> Computer {
-    let memory = [mix::Word {
+    let raw_memory = [mix::Word {
       bytes: [0, 0, 0, 0, 0],
       sign: mix::Sign::Positive,
     }; 4000];
+
+    let memory: Vec<MemoryCell> = raw_memory.iter().map(|x| MemoryCell::new(*x)).collect();
+    let memory = Arc::new(memory);
 
     let indexes = [mix::Address {
       bytes: [0, 0],
       sign: mix::Sign::Positive,
     }; 6];
 
-    Computer {
+    let mut io_devices: Vec<io::IoDevice> = Vec::with_capacity(21);
+    for i in 0..8 {
+      io_devices.push(io::TapeUnit::new(
+        make_io_path(&format!("tape{}.dat", i)).to_str().unwrap(),
+      ));
+    }
+    for i in 8..16 {
+      io_devices.push(io::DiskUnit::new(
+        make_io_path(&format!("disk{}.dat", i)).to_str().unwrap(),
+      ));
+    }
+
+    let computer = Computer {
       running: false,
       program_counter: 0,
       accumulator: mix::Word {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
       },
-      extension: mix::Word {
+      extension: Arc::new(MemoryCell::new(mix::Word {
         bytes: [0, 0, 0, 0, 0],
         sign: mix::Sign::Positive,
-      },
+      })),
       indexes,
       jump_address: mix::Address {
         bytes: [0, 0],
@@ -45,7 +102,14 @@ impl Computer {
       memory,
       overflow: false,
       comparison: mix::Comparison::Equal,
+      io_devices,
+    };
+
+    for io in computer.io_devices.iter() {
+      io.start(&computer);
     }
+
+    computer
   }
 
   pub fn start(&mut self) -> () {
@@ -68,7 +132,7 @@ impl Computer {
   }
 
   fn fetch(&self) -> mix::Instruction {
-    let word = self.memory[self.program_counter];
+    let word = self.memory[self.program_counter].read();
 
     mix::Instruction::from_word(word)
   }
@@ -110,7 +174,7 @@ Computer {{
 }}",
       self.program_counter,
       self.accumulator.value(),
-      self.extension.value(),
+      self.extension.read().value(),
       self.indexes[0].value(),
       self.indexes[1].value(),
       self.indexes[2].value(),

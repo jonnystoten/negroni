@@ -1,12 +1,14 @@
 use super::{Address, Instruction};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Sign {
   Positive,
   Negative,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Word {
   pub sign: Sign,
   pub bytes: [u8; 5],
@@ -67,8 +69,8 @@ impl Word {
 
     word
   }
-  
-  pub fn from_instruction(instruction: Instruction) -> Word {
+
+  pub fn from_instruction(instruction: &Instruction) -> Word {
     Word {
       sign: instruction.address.sign,
       bytes: [
@@ -77,7 +79,7 @@ impl Word {
         instruction.index_specification,
         instruction.modification,
         instruction.operation,
-      ]
+      ],
     }
   }
 

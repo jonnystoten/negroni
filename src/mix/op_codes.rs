@@ -3,6 +3,7 @@ pub const ADD: u8 = 1;
 pub const SUB: u8 = 2;
 pub const MUL: u8 = 3;
 pub const DIV: u8 = 4;
+pub const HLT: u8 = 5;
 
 pub const LDA: u8 = 8;
 pub const LD1: u8 = 9;
@@ -32,9 +33,11 @@ pub const STX: u8 = 31;
 pub const STJ: u8 = 32;
 pub const STZ: u8 = 33;
 
+pub const JBUS: u8 = 34;
 pub const IOC: u8 = 35;
 pub const IN: u8 = 36;
 pub const OUT: u8 = 37;
+pub const JRED: u8 = 38;
 
 pub const JMP: u8 = 39;
 pub const JSJ: u8 = 39;

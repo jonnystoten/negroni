@@ -13,9 +13,9 @@ pub use address_transfer::{Enter, Increase};
 pub use arithmetic::{Addition, Division, Multiplication};
 pub use comparison::Compare;
 pub use io::Io;
-pub use jump::{Jump, RegisterJump};
+pub use jump::{Jump, RegisterJump, IoJump};
 pub use loading::Load;
-pub use misc::NoOp;
+pub use misc::{NoOp, Halt};
 pub use storing::Store;
 
 pub trait Operation {

@@ -38,7 +38,10 @@ impl DiskUnit {
 impl ActualDevice for DiskUnit {
   fn read(&mut self, computer: &SlimComputer) -> Vec<mix::Word> {
     let block = computer.extension.read().value();
-    self.file.seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64));
+    self
+      .file
+      .seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64))
+      .unwrap();
 
     let mut buffer = vec![0; DiskUnit::word_size()];
     self.file.read(&mut buffer).unwrap();
@@ -47,7 +50,10 @@ impl ActualDevice for DiskUnit {
 
   fn write(&mut self, words: &[mix::Word], computer: &SlimComputer) {
     let block = computer.extension.read().value();
-    self.file.seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64));
+    self
+      .file
+      .seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64))
+      .unwrap();
 
     bincode::serialize_into(&self.file, words).unwrap();
     println!("done write");
@@ -57,7 +63,10 @@ impl ActualDevice for DiskUnit {
   fn control(&mut self, _m: isize, computer: &SlimComputer) {
     // TODO: does this actually save time later?
     let block = computer.extension.read().value();
-    self.file.seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64));
+    self
+      .file
+      .seek(SeekFrom::Start(block as u64 * DiskUnit::word_size() as u64))
+      .unwrap();
   }
 
   fn block_size(&self) -> usize {

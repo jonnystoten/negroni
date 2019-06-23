@@ -1,6 +1,6 @@
 use super::{Address, Instruction};
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Sign {
@@ -69,8 +69,8 @@ impl Word {
 
     word
   }
-  
-  pub fn from_instruction(instruction: Instruction) -> Word {
+
+  pub fn from_instruction(instruction: &Instruction) -> Word {
     Word {
       sign: instruction.address.sign,
       bytes: [
@@ -79,7 +79,7 @@ impl Word {
         instruction.index_specification,
         instruction.modification,
         instruction.operation,
-      ]
+      ],
     }
   }
 

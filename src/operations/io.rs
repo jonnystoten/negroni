@@ -61,16 +61,24 @@ mod tests {
         modification: 3,
         operation: mix::op_codes::IN,
       },
+      mix::Instruction {
+        address: mix::Address::from_value(3),
+        index_specification: 0,
+        modification: 3,
+        operation: mix::op_codes::JBUS,
+      },
+      mix::Instruction {
+        address: mix::Address::zero(),
+        index_specification: 0,
+        modification: 2,
+        operation: mix::op_codes::HLT,
+      },
     ];
 
-    for instruction in instructions.iter() {
-      instruction.decode().execute(&mut computer);
+    for (i, instruction) in instructions.iter().enumerate() {
+      computer.memory[i].write(mix::Word::from_instruction(instruction));
     }
-
-    // TODO: replace this with a JBUS when it's implemented
-    for io in computer.io_devices {
-      io.wait_ready();
-    }
+    computer.start();
 
     for i in 0..100 {
       assert_eq!(
@@ -87,7 +95,7 @@ mod tests {
     for i in 0..100 {
       computer.memory[1000 + i].write(mix::Word::from_value(i as isize));
     }
-    
+
     computer.extension.write(mix::Word::from_value(500));
 
     let instructions = [

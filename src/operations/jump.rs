@@ -99,11 +99,15 @@ impl<'a> IoJump<'a> {
 impl<'a> Operation for IoJump<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
     let address = computer.get_indexed_address_value(self.instruction) as usize;
-    let device = &computer.io_devices[self.instruction.modification as usize];
+
+    let busy = {
+      let device = &computer.io_devices[self.instruction.modification as usize];
+      device.busy()
+    };
 
     match self.instruction.operation {
-      mix::op_codes::JBUS => conditional_jump(address, computer, device.busy()),
-      mix::op_codes::JRED => conditional_jump(address, computer, !device.busy()),
+      mix::op_codes::JBUS => conditional_jump(address, computer, busy),
+      mix::op_codes::JRED => conditional_jump(address, computer, !busy),
       _ => panic!(
         "unknown opcode for jump operation: {}",
         self.instruction.operation

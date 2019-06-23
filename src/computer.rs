@@ -1,8 +1,12 @@
 
 use std::fmt;
-use std::sync::Arc;
+use std::fs;
 
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::sync::RwLock;
+
+use dirs;
 
 use crate::io;
 use crate::mix;
@@ -26,6 +30,17 @@ impl MemoryCell {
     let mut mem = self.lock.try_write().unwrap();
     *mem = word;
   }
+}
+
+fn make_io_path(filename: &str) -> PathBuf {
+  let home = dirs::home_dir().unwrap();
+  let mut io_dir = home.join(".negroni/io");
+  if cfg!(test) {
+    io_dir = io_dir.join("test");
+  }
+  fs::create_dir_all(&io_dir).unwrap();
+
+  io_dir.join(filename)
 }
 
 pub struct Computer {
@@ -58,10 +73,14 @@ impl Computer {
 
     let mut io_devices: Vec<io::IoDevice> = Vec::with_capacity(21);
     for i in 0..8 {
-      io_devices.push(io::TapeUnit::new(&format!("tape{}.dat", i)));
+      io_devices.push(io::TapeUnit::new(
+        make_io_path(&format!("tape{}.dat", i)).to_str().unwrap(),
+      ));
     }
     for i in 8..16 {
-      io_devices.push(io::DiskUnit::new(&format!("disk{}.dat", i)));
+      io_devices.push(io::DiskUnit::new(
+        make_io_path(&format!("disk{}.dat", i)).to_str().unwrap(),
+      ));
     }
 
     let computer = Computer {

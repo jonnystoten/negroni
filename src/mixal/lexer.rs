@@ -1,4 +1,4 @@
-#[derive(PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Token {
   ILLEGAL,
   EOF,
@@ -24,7 +24,7 @@ pub enum Token {
   CHARCODE,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Lexeme {
   pub token: Token,
   pub literal: String,

@@ -12,13 +12,23 @@ fn main() {
 
     println!("===SHAKE===");
 
-    lex(filename);
-}
-
-fn lex(filename: &String) {
     let mut file = File::open(filename).unwrap();
     let input = &mut String::new();
     file.read_to_string(input).unwrap();
+
+    lex(input);
+    parse(input);
+}
+
+fn parse(input: &String) {
+    let mut parser = mixal::Parser::new(input);
+    let program = match parser.parse() {
+        Ok(program) => program,
+        Err(err) => panic!(err),
+    };
+}
+
+fn lex(input: &String) {
 
     let mut debug = String::new();
     let mut lexer = mixal::Lexer::new(input);

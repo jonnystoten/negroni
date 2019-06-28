@@ -3,6 +3,8 @@ pub const ADD: u8 = 1;
 pub const SUB: u8 = 2;
 pub const MUL: u8 = 3;
 pub const DIV: u8 = 4;
+pub const NUM: u8 = 5;
+pub const CHAR: u8 = 5;
 pub const HLT: u8 = 5;
 
 pub const LDA: u8 = 8;

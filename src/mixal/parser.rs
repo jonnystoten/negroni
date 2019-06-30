@@ -1,100 +1,223 @@
+use regex::Regex;
+
 use super::lexer::{Lexeme, Token};
 use super::Lexer;
 use super::OP_CODES;
 
-pub trait Statement {}
+pub trait StatementVisitor {
+  fn visit_mix_statement(&mut self, statement: &MixStatement) -> Result<(), &'static str>;
+  fn visit_equ_statement(&mut self, statement: &EquStatement) -> Result<(), &'static str>;
+  fn visit_orig_statement(&mut self, statement: &OrigStatement) -> Result<(), &'static str>;
+  fn visit_con_statement(&mut self, statement: &ConStatement) -> Result<(), &'static str>;
+  fn visit_alf_statement(&mut self, statement: &AlfStatement) -> Result<(), &'static str>;
+  fn visit_end_statement(&mut self, statement: &EndStatement) -> Result<(), &'static str>;
+}
+
+pub trait Statement {
+  fn symbol(&self) -> Option<Symbol>;
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str>;
+}
 
 pub struct MixStatement {
-  symbol: Option<Symbol>,
-  op: String,
-  a_part: Option<Box<Node>>,
-  index_part: Option<Box<Node>>,
-  f_part: Option<Box<Node>>,
+  pub symbol: Option<Symbol>,
+  pub op: String,
+  pub a_part: Option<Box<Node>>,
+  pub index_part: Option<Box<Node>>,
+  pub f_part: Option<Box<Node>>,
 }
 
-impl Statement for MixStatement {}
+impl Statement for MixStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_mix_statement(self)
+  }
+}
 
 pub struct EquStatement {
-  symbol: Option<Symbol>,
-  address: Box<Node>,
+  pub symbol: Option<Symbol>,
+  pub address: Box<Node>,
 }
 
-impl Statement for EquStatement {}
+impl Statement for EquStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_equ_statement(self)
+  }
+}
 
 pub struct OrigStatement {
-  symbol: Option<Symbol>,
-  address: Box<Node>,
+  pub symbol: Option<Symbol>,
+  pub address: Box<Node>,
 }
 
-impl Statement for OrigStatement {}
+impl Statement for OrigStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_orig_statement(self)
+  }
+}
 
 pub struct ConStatement {
-  symbol: Option<Symbol>,
-  address: Box<Node>,
+  pub symbol: Option<Symbol>,
+  pub address: Box<Node>,
 }
 
-impl Statement for ConStatement {}
+impl Statement for ConStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_con_statement(self)
+  }
+}
 
 pub struct AlfStatement {
   symbol: Option<Symbol>,
-  char_code: String,
+  pub char_code: String,
 }
 
-impl Statement for AlfStatement {}
+impl Statement for AlfStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_alf_statement(self)
+  }
+}
 
 pub struct EndStatement {
   symbol: Option<Symbol>,
-  address: Box<Node>,
+  pub address: Box<Node>,
 }
 
-impl Statement for EndStatement {}
+impl Statement for EndStatement {
+  fn symbol(&self) -> Option<Symbol> {
+    self.symbol.clone()
+  }
+
+  fn accept(&self, visitor: &mut dyn StatementVisitor) -> Result<(), &'static str> {
+    visitor.visit_end_statement(self)
+  }
+}
 
 pub struct Program {
-  statements: Vec<Box<Statement>>,
+  pub statements: Vec<Box<dyn Statement>>,
 }
 
-pub trait Node {}
+pub trait NodeVisitor {
+  fn visit_number(&mut self, number: &Number) -> isize;
+  fn visit_asterisk(&mut self, asterisk: &Asterisk) -> isize;
+  fn visit_symbol(&mut self, symbol: &Symbol) -> isize;
+  fn visit_literal_constant(&mut self, literal_constant: &LiteralConstant) -> isize;
+  fn visit_expression(&mut self, expression: &Expression) -> isize;
+  fn visit_w_value(&mut self, w_value: &WValue) -> isize;
+}
+
+pub trait Node {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize;
+}
 
 pub struct Number {
-  value: usize,
+  pub value: usize,
 }
 
-impl Node for Number {}
+impl Node for Number {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_number(self)
+  }
+}
 
 pub struct Asterisk {}
 
-impl Node for Asterisk {}
+impl Node for Asterisk {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_asterisk(self)
+  }
+}
 
+#[derive(Clone)]
 pub struct Symbol {
   name: String,
 }
 
-impl Node for Symbol {}
+impl Symbol {
+  pub fn internal_name(&self) -> String {
+    self.name.clone()
+  }
+
+  pub fn is_local(&self) -> bool {
+    self.is_local_declaration() || self.is_local_forward_ref() || self.is_local_back_ref()
+  }
+
+  pub fn is_local_declaration(&self) -> bool {
+    let regex = Regex::new(r"^\dH$").unwrap();
+    regex.is_match(&self.name)
+  }
+
+  pub fn is_local_forward_ref(&self) -> bool {
+    let regex = Regex::new(r"^\dF$").unwrap();
+    regex.is_match(&self.name)
+  }
+
+  pub fn is_local_back_ref(&self) -> bool {
+    let regex = Regex::new(r"^\dB$").unwrap();
+    regex.is_match(&self.name)
+  }
+}
+
+impl Node for Symbol {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_symbol(self)
+  }
+}
 
 pub struct LiteralConstant {
-  value: Box<Node>,
+  pub value: Box<Node>,
 }
 
-impl Node for LiteralConstant {}
+impl Node for LiteralConstant {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_literal_constant(self)
+  }
+}
 
 pub struct Expression {
-  left: Option<Box<Node>>,
-  operator: Token,
-  right: Box<Node>,
+  pub left: Option<Box<Node>>,
+  pub operator: Token,
+  pub right: Box<Node>,
 }
 
-impl Node for Expression {}
+impl Node for Expression {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_expression(self)
+  }
+}
 
 pub struct WValue {
-  parts: Vec<WValuePart>,
+  pub parts: Vec<WValuePart>,
 }
 
 pub struct WValuePart {
-  expression: Box<Node>,
+  pub expression: Box<Node>,
   f_part: Option<Box<Node>>,
 }
 
-impl Node for WValue {}
+impl Node for WValue {
+  fn accept(&self, visitor: &mut dyn NodeVisitor) -> isize {
+    visitor.visit_w_value(self)
+  }
+}
 
 struct ParseBuffer {
   scanned_values: Vec<Lexeme>,

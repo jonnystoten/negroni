@@ -1,4 +1,4 @@
-use super::{Address, Instruction};
+use super::{char_codes, Address, Instruction};
 
 use serde::{Deserialize, Serialize};
 
@@ -81,6 +81,16 @@ impl Word {
         instruction.operation,
       ],
     }
+  }
+
+  pub fn from_char_code(char_code: &str) -> Word {
+    let mut word = Word::zero();
+    for (index, ch) in char_code.chars().enumerate() {
+      let byte = char_codes::get_code(&ch);
+      word.bytes[index] = byte;
+    }
+
+    word
   }
 
   pub fn fits_in_word(value: isize) -> bool {

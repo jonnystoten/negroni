@@ -3,6 +3,7 @@ use std::env;
 use std::fs::File;
 use std::io::Read;
 
+use negroni::mix;
 use negroni::mixal;
 
 fn main() {
@@ -26,6 +27,15 @@ fn parse(input: &String) {
         Ok(program) => program,
         Err(err) => panic!(err),
     };
+
+    let mut assembler = mixal::Assembler::new();
+    assembler.assemble(program).unwrap();
+
+    let mut words: Vec<(&usize, &mix::Word)> = assembler.words.iter().collect();
+    words.sort_by_key(|x| x.0);
+    for word in words {
+        println!("{:?}", word);
+    }
 }
 
 fn lex(input: &String) {

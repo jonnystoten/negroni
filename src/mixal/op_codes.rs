@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use crate::mix;
 
 pub struct OpCode {
-  value: u8,
-  default_fs: u8,
+  pub value: u8,
+  pub default_fs: u8,
 }
 
 lazy_static! {

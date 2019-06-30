@@ -4,6 +4,7 @@ mod word;
 
 #[allow(dead_code)]
 pub mod op_codes;
+pub mod char_codes;
 pub use address::Address;
 pub use instruction::Instruction;
 pub use word::{Sign, Word};

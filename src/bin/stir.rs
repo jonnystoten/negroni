@@ -1,16 +1,39 @@
-use negroni::mix;
+use std::fs::File;
+use std::io::{Read, Seek, SeekFrom};
+
+use std::collections::HashMap;
+
+use bincode;
+
 use negroni::computer;
+use negroni::mix;
 
 fn main() {
     let mut computer = computer::Computer::new();
 
-    // set the first instruction manually for now
-    computer.memory[0].write(mix::Word {
-        bytes: [10, 20, 0, 0, 48],
-        sign: mix::Sign::Positive,
-    });
+    let mut input_file = File::open("out.bin").unwrap();
+    let size = {
+        let result = input_file.seek(SeekFrom::End(0)).unwrap();
+        input_file.seek(SeekFrom::Start(0)).unwrap();
+        result
+    };
+
+    let mut buffer = vec![0; size as usize];
+    input_file.read(&mut buffer).unwrap();
+    let (words, program_start): (HashMap<usize, mix::Word>, usize) =
+        bincode::deserialize(&buffer).unwrap();
+
+    for (address, word) in words {
+        computer.memory[address].write(word);
+    }
+
+    computer.program_counter = program_start;
 
     computer.start();
+
+    for io_device in &computer.io_devices {
+        io_device.wait_ready();
+    }
 
     println!("===MIX COMPUTER===");
     println!("{:?}", computer);

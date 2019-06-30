@@ -12,7 +12,7 @@ use super::{
 
 pub struct Assembler {
   pub words: HashMap<usize, mix::Word>,
-  program_start: usize,
+  pub program_start: usize,
   location_counter: usize,
   symbol_table: HashMap<String, isize>,
   future_reference_table: HashMap<String, Vec<usize>>,

@@ -46,8 +46,6 @@ impl IoDevice {
       let computer = &start_rx.recv().unwrap();
 
       for received in td.rx {
-        println!("oh hooooo {} {}", received.operation, received.address);
-
         match received.operation {
           mix::op_codes::IN => {
             let words = actual_device.read(computer);
@@ -82,7 +80,10 @@ impl IoDevice {
   pub fn start(&self, computer: &computer::Computer) {
     let memory = computer.memory.clone();
     let extension = computer.extension.clone();
-    self.set_computer.send(SlimComputer {memory, extension}).unwrap();
+    self
+      .set_computer
+      .send(SlimComputer { memory, extension })
+      .unwrap();
   }
 
   pub fn busy(&self) -> bool {
@@ -100,7 +101,6 @@ impl IoDevice {
   pub fn wait_ready(&self) {
     let (lock, cvar) = &*self.busy_pair;
     let mut busy = lock.lock().unwrap();
-    println!("busy: {}", *busy);
     while *busy {
       busy = cvar.wait(busy).unwrap();
     }

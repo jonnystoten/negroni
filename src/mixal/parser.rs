@@ -153,7 +153,13 @@ pub struct Symbol {
 
 impl Symbol {
   pub fn internal_name(&self) -> String {
-    self.name.clone()
+    if self.is_local() {
+      let mut string = String::from("__loc:");
+      string.push_str(&self.name[..1]);
+      string
+    } else {
+      self.name.clone()
+    }
   }
 
   pub fn is_local(&self) -> bool {

@@ -1,10 +1,35 @@
 use std::collections::HashMap;
 
-//use crate::mix;
+struct BiMap {
+  char_codes_to_bytes: HashMap<char, u8>,
+  bytes_to_char_codes: HashMap<u8, char>,
+}
+
+impl BiMap {
+  fn new() -> BiMap {
+    BiMap{
+      char_codes_to_bytes: HashMap::new(),
+      bytes_to_char_codes: HashMap::new(),
+    }
+  }
+  
+  fn insert(&mut self, ch: char, code: u8) {
+    self.char_codes_to_bytes.insert(ch, code);
+    self.bytes_to_char_codes.insert(code, ch);
+  }
+  
+  fn get_code(&self, ch: &char) -> u8 {
+    self.char_codes_to_bytes[ch]
+  }
+  
+  fn get_char(&self, byte: &u8) -> char {
+    self.bytes_to_char_codes[byte]
+  }
+}
 
 lazy_static! {
-  static ref CHAR_CODES_TO_BYTES: HashMap<char, u8> = {
-    let mut m = HashMap::new();
+  static ref CHAR_CODE_MAP: BiMap = {
+    let mut m = BiMap::new();
     m.insert(' ', 0);
 	  m.insert('A', 1);
 	  m.insert('B', 2);
@@ -66,5 +91,9 @@ lazy_static! {
 }
 
 pub fn get_code(char_code: &char) -> u8 {
-  CHAR_CODES_TO_BYTES[char_code]
+  CHAR_CODE_MAP.get_code(char_code)
+}
+
+pub fn get_char(byte: &u8) -> char {
+  CHAR_CODE_MAP.get_char(byte)
 }

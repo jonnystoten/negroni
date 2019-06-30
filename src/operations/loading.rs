@@ -15,7 +15,7 @@ impl<'a> Load<'a> {
 
 impl<'a> Operation for Load<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
-    let address = self.instruction.address.value() as usize;
+    let address = computer.get_indexed_address_value(self.instruction) as usize;
 
     let word = computer.memory[address].read();
     let mut word = word.apply_field_spec(self.instruction.modification);

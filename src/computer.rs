@@ -83,6 +83,16 @@ impl Computer {
       ));
     }
 
+    io_devices.push(io::CardReader::new(
+      make_io_path("card_reader.dat").to_str().unwrap(),
+    ));
+    io_devices.push(io::CardPunch::new(
+      make_io_path("card_punch.dat").to_str().unwrap(),
+    ));
+    io_devices.push(io::LinePrinter::new(
+      make_io_path("line_printer.dat").to_str().unwrap(),
+    ));
+
     let computer = Computer {
       running: false,
       program_counter: 0,
@@ -113,8 +123,16 @@ impl Computer {
   }
 
   pub fn start(&mut self) -> () {
+    self.start_interactive(|_| {});
+  }
+
+  pub fn start_interactive<F>(&mut self, f: F)
+  where
+    F: Fn(&Self) -> (),
+  {
     self.running = true;
     while self.running {
+      f(self);
       self.fetch_decode_execute();
       if self.program_counter >= self.memory.len() {
         self.running = false;

@@ -1,4 +1,4 @@
-use super::{Word, Sign};
+use super::{Sign, Word};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Address {
@@ -20,7 +20,7 @@ impl Address {
       sign: Sign::Negative,
     }
   }
-  
+
   pub fn from_value(value: isize) -> Address {
     let sign = if value.signum() < 0 {
       Sign::Negative

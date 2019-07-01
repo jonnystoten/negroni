@@ -4,6 +4,7 @@ use super::Operation;
 
 use crate::io;
 use crate::mix;
+
 pub struct Io<'a> {
   instruction: &'a mix::Instruction,
 }

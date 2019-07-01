@@ -15,12 +15,18 @@ impl<'a> Division<'a> {
 
 impl<'a> Operation for Division<'a> {
   fn execute(&self, computer: &mut Computer) -> () {
-    let address = self.instruction.address.value() as usize;
+    let address = computer.get_indexed_address_value(self.instruction) as usize;
 
     let word = computer.memory[address].read();
     let word = word.apply_field_spec(self.instruction.modification);
 
     if computer.accumulator.value().abs() >= word.value().abs() {
+      println!("UNDEFINED BEHAVIOUR");
+      println!(
+        "{} >= {}",
+        computer.accumulator.value().abs(),
+        word.value().abs()
+      );
       // the values of rA and rX is undefined behaviour (pg. 131) - we'll just zero them
       computer.accumulator = mix::Word::zero();
       computer.extension.write(mix::Word::zero());

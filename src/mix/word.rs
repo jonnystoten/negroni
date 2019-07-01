@@ -1,4 +1,6 @@
-use super::{Address, Instruction};
+use std::fmt;
+
+use super::{char_codes, Address, Instruction};
 
 use serde::{Deserialize, Serialize};
 
@@ -8,7 +10,7 @@ pub enum Sign {
   Negative,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Word {
   pub sign: Sign,
   pub bytes: [u8; 5],
@@ -83,6 +85,26 @@ impl Word {
     }
   }
 
+  pub fn from_char_code(char_code: &str) -> Word {
+    let mut word = Word::zero();
+    for (index, ch) in char_code.chars().enumerate() {
+      let byte = char_codes::get_code(&ch);
+      word.bytes[index] = byte;
+    }
+
+    word
+  }
+
+  pub fn to_char_code(&self) -> String {
+    let mut result = String::new();
+    for byte in self.bytes.iter() {
+      let ch = char_codes::get_char(byte);
+      result.push(ch);
+    }
+
+    result
+  }
+
   pub fn fits_in_word(value: isize) -> bool {
     let max = 64isize.pow(5) - 1;
     value.abs() <= max
@@ -142,5 +164,46 @@ impl Word {
       bytes: [self.bytes[3], self.bytes[4]],
       sign: self.sign,
     }
+  }
+}
+
+impl fmt::Debug for Word {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(
+      f,
+      "{} [{}]",
+      fmt_signed_bytes(&self.sign, &self.bytes, self.value()),
+      fmt_instruction(self)
+    )
+  }
+}
+
+fn fmt_signed_bytes(sign: &Sign, bytes: &[u8], value: isize) -> String {
+  format!("{} {} ({:010})", fmt_sign(sign), fmt_bytes(bytes), value)
+}
+
+fn fmt_instruction(word: &Word) -> String {
+  let address = &word.bytes[..2];
+  let address_val = address[0] as isize * 64 + address[1] as isize;
+  format!(
+    "{} {:04} {}",
+    fmt_sign(&word.sign),
+    address_val,
+    fmt_bytes(&word.bytes[2..])
+  )
+}
+
+fn fmt_bytes(bytes: &[u8]) -> String {
+  let mut result = String::new();
+  for byte in bytes {
+    result.push_str(&format!("{:02} ", byte));
+  }
+  result
+}
+
+fn fmt_sign(sign: &Sign) -> &'static str {
+  match sign {
+    Sign::Positive => "+",
+    Sign::Negative => "-",
   }
 }

@@ -27,19 +27,15 @@ impl<'a> Operation for Store<'a> {
       _ => panic!("unknown store operation {}", self.instruction.operation),
     };
 
-    let address = self.instruction.address.value();
+    let address = computer.get_indexed_address_value(self.instruction);
     let (left, right) = mix::decode_field_spec(self.instruction.modification);
     let mut left = left;
-    println!("left: {:?}", left);
-    println!("right: {:?}", right);
-
 
     let mut num_bytes = ((right - left) + 1) as usize;
 
     if num_bytes > 0 && left == 0 {
       num_bytes -= 1;
     }
-    println!("num_bytes: {:?}", num_bytes);
 
     let bytes = get_bytes_to_store(&register, num_bytes);
     let mut word = computer.memory[address as usize].read();
@@ -48,8 +44,6 @@ impl<'a> Operation for Store<'a> {
       left += 1;
     }
     for i in 0..num_bytes {
-      println!("{:?}", bytes);
-      println!("{:?}", i);
       let value = bytes[i];
       word.bytes[left as usize + i - 1] = value;
     }

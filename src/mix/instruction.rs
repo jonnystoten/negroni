@@ -29,11 +29,10 @@ impl Instruction {
     match self.operation {
       op_codes::NOP => Box::new(operations::NoOp::new()),
       op_codes::HLT => match self.modification {
+        0 => Box::new(operations::ConvertToNumeric::new()),
+        1 => Box::new(operations::ConvertToCharacters::new()),
         2 => Box::new(operations::Halt::new()),
-        _ => panic!(
-          "unknown modification for special op: {}",
-          self.modification
-        ),
+        _ => panic!("unknown modification for special op: {}", self.modification),
       },
       op_codes::ADD | op_codes::SUB => Box::new(operations::Addition::new(self)),
       op_codes::MUL => Box::new(operations::Multiplication::new(self)),

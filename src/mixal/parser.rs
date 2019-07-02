@@ -290,7 +290,7 @@ impl Parser {
     op: String,
   ) -> Result<MixStatement, &'a str> {
     if !OP_CODES.contains_key(&op[..]) {
-      println!("opcode, {}", op);
+      eprintln!("opcode, {}", op);
       return Err("unknown op code");
     }
 

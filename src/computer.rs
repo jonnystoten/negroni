@@ -173,6 +173,16 @@ impl Computer {
 
 impl fmt::Debug for Computer {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    let memory = self
+      .memory
+      .iter()
+      .map(|cell| cell.read())
+      .enumerate()
+      .filter(|(_, val)| val.value() != 0)
+      .map(|(index, val)| format!("{}: {:?}", index, val))
+      .collect::<Vec<String>>()
+      .join("\n");
+
     write!(
       f,
       "\
@@ -189,19 +199,22 @@ Computer {{
   rJ:         {:?}
   Overflow:   {:?}
   Comparison: {:?}
+  Memory:
+{}
 }}",
       self.program_counter,
-      self.accumulator.value(),
-      self.extension.read().value(),
-      self.indexes[0].value(),
-      self.indexes[1].value(),
-      self.indexes[2].value(),
-      self.indexes[3].value(),
-      self.indexes[4].value(),
-      self.indexes[5].value(),
-      self.jump_address.value(),
+      self.accumulator,
+      self.extension.read(),
+      self.indexes[0],
+      self.indexes[1],
+      self.indexes[2],
+      self.indexes[3],
+      self.indexes[4],
+      self.indexes[5],
+      self.jump_address,
       self.overflow,
       self.comparison,
+      memory
     )
   }
 }

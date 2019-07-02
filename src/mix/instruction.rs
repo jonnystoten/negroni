@@ -34,6 +34,8 @@ impl Instruction {
         2 => Box::new(operations::Halt::new()),
         _ => panic!("unknown modification for special op: {}", self.modification),
       },
+      op_codes::SLA => Box::new(operations::Shift::new(self)),
+      op_codes::MOVE => Box::new(operations::Move::new(self)),
       op_codes::ADD | op_codes::SUB => Box::new(operations::Addition::new(self)),
       op_codes::MUL => Box::new(operations::Multiplication::new(self)),
       op_codes::DIV => Box::new(operations::Division::new(self)),

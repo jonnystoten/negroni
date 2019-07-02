@@ -7,6 +7,15 @@ pub const NUM: u8 = 5;
 pub const CHAR: u8 = 5;
 pub const HLT: u8 = 5;
 
+pub const SLA: u8 = 6;
+pub const SRA: u8 = 6;
+pub const SLAX: u8 = 6;
+pub const SRAX: u8 = 6;
+pub const SLC: u8 = 6;
+pub const SRC: u8 = 6;
+
+pub const MOVE: u8 = 7;
+
 pub const LDA: u8 = 8;
 pub const LD1: u8 = 9;
 pub const LD2: u8 = 10;

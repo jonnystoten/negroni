@@ -18,12 +18,12 @@ lazy_static! {
     m.insert("NUM", OpCode  {value: mix::op_codes::NUM, default_fs: 0});
     m.insert("CHAR", OpCode {value: mix::op_codes::CHAR, default_fs: 1});
     m.insert("HLT", OpCode  {value: mix::op_codes::HLT, default_fs: 2});
-    // m.insert("SLA", OpCode  {value: mix::op_codes::SLA, default_fs: 0});
-    // m.insert("SRA", OpCode  {value: mix::op_codes::SRA, default_fs: 1});
-    // m.insert("SLAX", OpCode {value: mix::op_codes::SLAX, default_fs: 2});
-    // m.insert("SRAX", OpCode {value: mix::op_codes::SRAX, default_fs: 3});
-    // m.insert("SLC", OpCode  {value: mix::op_codes::SLC, default_fs: 4});
-    // m.insert("SRC", OpCode  {value: mix::op_codes::SRC, default_fs: 5});
+    m.insert("SLA", OpCode  {value: mix::op_codes::SLA, default_fs: 0});
+    m.insert("SRA", OpCode  {value: mix::op_codes::SRA, default_fs: 1});
+    m.insert("SLAX", OpCode {value: mix::op_codes::SLAX, default_fs: 2});
+    m.insert("SRAX", OpCode {value: mix::op_codes::SRAX, default_fs: 3});
+    m.insert("SLC", OpCode  {value: mix::op_codes::SLC, default_fs: 4});
+    m.insert("SRC", OpCode  {value: mix::op_codes::SRC, default_fs: 5});
     // m.insert("MOVE", OpCode {value: mix::op_codes::MOVE, default_fs: 5});
     m.insert("LDA", OpCode  {value: mix::op_codes::LDA, default_fs: 5});
     m.insert("LD1", OpCode  {value: mix::op_codes::LD1, default_fs: 5});

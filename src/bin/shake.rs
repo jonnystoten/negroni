@@ -24,7 +24,7 @@ fn main() {
     let filename = matches.value_of("INPUT").unwrap();
     let debug = matches.is_present("debug");
 
-    println!("===SHAKE===");
+    eprintln!("===SHAKE===");
 
     let mut file = File::open(filename).unwrap();
     let input = &mut String::new();
@@ -46,7 +46,7 @@ fn assemble(input: &String, format: &str, debug: bool) {
         let mut words: Vec<(&usize, &mix::Word)> = assembler.words.iter().collect();
         words.sort_by_key(|x| x.0);
         for word in words {
-            println!("{:?}", word);
+            eprintln!("{:?}", word);
         }
     }
 
@@ -129,10 +129,10 @@ fn lex(input: &String) {
     let mut lexer = mixal::Lexer::new(input);
     loop {
         let lexeme = lexer.scan();
-        // println!("{:?}", lexeme);
+        // eprintln!("{:?}", lexeme);
 
         if lexeme.token == mixal::Token::ILLEGAL {
-            println!(
+            eprintln!(
                 "ERROR: unexpected token {} ({}:{})",
                 lexeme.literal, lexeme.line, lexeme.col
             );
@@ -140,12 +140,12 @@ fn lex(input: &String) {
         }
 
         if lexeme.token == mixal::Token::EOF {
-            println!("[EOF]");
+            eprintln!("[EOF]");
             break;
         }
 
         if lexeme.token == mixal::Token::EOL {
-            println!("{}[EOL]", debug);
+            eprintln!("{}[EOL]", debug);
             debug = String::new();
         } else {
             debug = format!("{}[{}]", debug, lexeme.literal);

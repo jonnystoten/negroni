@@ -56,8 +56,8 @@ impl ActualDevice for DiskUnit {
       .unwrap();
 
     bincode::serialize_into(&self.file, words).unwrap();
-    println!("done write");
-    println!("new pos: {}", self.file.seek(SeekFrom::Current(0)).unwrap());
+    eprintln!("done write");
+    eprintln!("new pos: {}", self.file.seek(SeekFrom::Current(0)).unwrap());
   }
 
   fn control(&mut self, _m: isize, computer: &SlimComputer) {

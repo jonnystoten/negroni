@@ -44,17 +44,17 @@ impl ActualDevice for TapeUnit {
 
   fn write(&mut self, words: &[mix::Word], _computer: &SlimComputer) {
     bincode::serialize_into(&self.file, words).unwrap();
-    println!("done write");
-    println!("new pos: {}", self.file.seek(SeekFrom::Current(0)).unwrap());
+    eprintln!("done write");
+    eprintln!("new pos: {}", self.file.seek(SeekFrom::Current(0)).unwrap());
   }
 
   fn control(&mut self, m: isize, _computer: &SlimComputer) {
-    println!(
+    eprintln!(
       "current pos: {}",
       self.file.seek(SeekFrom::Current(0)).unwrap()
     );
     let to_seek = m * TapeUnit::word_size() as isize;
-    println!("moving {} blocks, that's {} bytes", m, to_seek);
+    eprintln!("moving {} blocks, that's {} bytes", m, to_seek);
     self.file.seek(SeekFrom::Current(to_seek as i64)).unwrap();
   }
 

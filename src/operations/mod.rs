@@ -6,6 +6,8 @@ mod io;
 mod jump;
 mod loading;
 mod misc;
+mod mov;
+mod shift;
 mod storing;
 
 use crate::computer::Computer;
@@ -18,6 +20,8 @@ pub use io::Io;
 pub use jump::{IoJump, Jump, RegisterJump};
 pub use loading::Load;
 pub use misc::{Halt, NoOp};
+pub use mov::Move;
+pub use shift::Shift;
 pub use storing::Store;
 
 pub trait Operation {

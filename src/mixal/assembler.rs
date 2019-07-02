@@ -108,7 +108,7 @@ impl Assembler {
   }
 
   fn add_symbol(&mut self, name: String, value: isize) {
-    println!("adding symbol '{}' with value = {}", name, value);
+    eprintln!("adding symbol '{}' with value = {}", name, value);
     self.symbol_table.insert(name.clone(), value);
     self.fixup_future_refs(name);
   }

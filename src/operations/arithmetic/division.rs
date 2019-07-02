@@ -21,8 +21,8 @@ impl<'a> Operation for Division<'a> {
     let word = word.apply_field_spec(self.instruction.modification);
 
     if computer.accumulator.value().abs() >= word.value().abs() {
-      println!("UNDEFINED BEHAVIOUR");
-      println!(
+      eprintln!("UNDEFINED BEHAVIOUR");
+      eprintln!(
         "{} >= {}",
         computer.accumulator.value().abs(),
         word.value().abs()

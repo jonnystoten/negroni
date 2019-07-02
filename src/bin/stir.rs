@@ -47,7 +47,7 @@ fn main() {
                 computer.memory[address].write(word);
             }
 
-            println!("Setting PC to {}", program_start);
+            eprintln!("Setting PC to {}", program_start);
             computer.program_counter = program_start;
         }
         "deck" => {
@@ -71,8 +71,12 @@ fn main() {
 
     if interactive {
         computer.start_interactive(|computer| {
-            println!("===MIX COMPUTER===");
-            println!("{:?}", computer);
+            if computer.program_counter < 100 {
+                // don't step through the loader
+                return;
+            }
+            eprintln!("===MIX COMPUTER===");
+            eprintln!("{:?}", computer);
             let mut stdin = std::io::stdin();
             stdin.read(&mut [0u8]).unwrap();
         });
@@ -84,6 +88,6 @@ fn main() {
         io_device.wait_ready();
     }
 
-    println!("===MIX COMPUTER===");
-    println!("{:?}", computer);
+    eprintln!("===MIX COMPUTER===");
+    eprintln!("{:?}", computer);
 }

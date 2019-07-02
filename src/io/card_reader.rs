@@ -1,5 +1,5 @@
 use std::fs::{File, OpenOptions};
-use std::io::{Write, Seek, SeekFrom};
+use std::io::{BufRead, BufReader, Seek, SeekFrom, Write};
 
 use super::io_device::IoDevice;
 use super::{ActualDevice, SlimComputer};
@@ -9,42 +9,53 @@ use crate::mix;
 use bincode;
 
 pub struct CardReader {
-  file: File,
+  reader: BufReader<File>,
 }
 
 impl CardReader {
   pub fn new(filename: &str) -> IoDevice {
-    let file = OpenOptions::new()
-      .write(true)
-      .create(true)
-      .open(filename)
-      .unwrap();
+    let file = OpenOptions::new().read(true).open(filename).unwrap();
+    let reader = BufReader::new(file);
 
-    let tape = CardReader { file };
+    let tape = CardReader { reader };
     IoDevice::new(Box::new(tape))
   }
 
   const fn block_size() -> usize {
     16
   }
-
-  fn line_size() -> usize {
-    let chars = ['A'; CardReader::block_size() + 1];
-    bincode::serialized_size(&chars[..]).unwrap() as usize
-  }
 }
 
 impl ActualDevice for CardReader {
-  fn read(&mut self, computer: &SlimComputer) -> Vec<mix::Word> {
-    panic!("IN for card reader not implemented");
+  fn read(&mut self, _computer: &SlimComputer) -> Vec<mix::Word> {
+    let mut line = String::new();
+    self.reader.read_line(&mut line).unwrap();
+    line.pop();
+    eprintln!("READ {:?}", line);
+
+    let mut remaining = &line[..];
+
+    let mut words = vec![];
+    let mut new_s;
+    for _ in 0..self.block_size() {
+      if remaining.len() < 5 {
+        new_s = format!("{:5}", remaining);
+        remaining = &new_s;
+      }
+      let (left, right) = remaining.split_at(5);
+      remaining = right;
+      words.push(mix::Word::from_char_code(left));
+    }
+
+    words
   }
 
-  fn write(&mut self, words: &[mix::Word], computer: &SlimComputer) {
+  fn write(&mut self, _words: &[mix::Word], _computer: &SlimComputer) {
     panic!("cannot write to a card reader");
   }
 
-  fn control(&mut self, _m: isize, computer: &SlimComputer) {
-    panic!("IOC for card reader not implemented")
+  fn control(&mut self, _m: isize, _computer: &SlimComputer) {
+    panic!("no IOC for card reader")
   }
 
   fn block_size(&self) -> usize {

@@ -1,0 +1,31 @@
+* Negroni
+
+An emulator for the mythical computer "MIX" from Donald Knuth's /The Art of Computer Programming/.
+
+There are two components to negroni:
+- ~stir~ :: The MIX emulator
+- ~shake~ :: The MIXAL assembler
+
+** ~stir~
+
+This MIX emulator is fairly fully-featured, and almost all operations are implemented,
+but there are a few exceptions and limitations:
+
+- Floating point operations (~FADD~, ~FSUB~, ~FMUL~, ~FDIV~, ~FCMP~) are not implemented.
+- Only a binary version of MIX is emulated.
+- No timing information is captured
+- Typewriter and paper tape I/O is not supported.
+- Writing to memory being accessed by an ~OUT~ operation, or reading memory
+  being accessed by an ~IN~ operation will cause a panic.
+
+** ~shake~
+
+*** Limitations
+
+- String literals (for ~ALF~ operations) must be wrapped in double quotes
+- Remarks at the end of a line must begin with a ~#~
+
+*** Features to add later
+
+- W-values are not supported beyond a single expression
+- Invalid of future values do not cause errors, and produce invalid programs

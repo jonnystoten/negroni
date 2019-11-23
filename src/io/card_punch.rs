@@ -1,5 +1,5 @@
 use std::fs::{File, OpenOptions};
-use std::io::{Write, Seek, SeekFrom};
+use std::io::{Seek, SeekFrom, Write};
 
 use super::io_device::IoDevice;
 use super::{ActualDevice, SlimComputer};
@@ -35,7 +35,7 @@ impl CardPunch {
 }
 
 impl ActualDevice for CardPunch {
-  fn read(&mut self, computer: &SlimComputer) -> Vec<mix::Word> {
+  fn read(&mut self, _computer: &SlimComputer) -> Vec<mix::Word> {
     panic!("cannot read from a card punch");
   }
 

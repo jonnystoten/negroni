@@ -1,12 +1,10 @@
 use std::fs::{File, OpenOptions};
-use std::io::{BufRead, BufReader, Seek, SeekFrom, Write};
+use std::io::{BufRead, BufReader};
 
 use super::io_device::IoDevice;
 use super::{ActualDevice, SlimComputer};
 
 use crate::mix;
-
-use bincode;
 
 pub struct CardReader {
   reader: BufReader<File>,

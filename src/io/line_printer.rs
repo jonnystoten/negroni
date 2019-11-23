@@ -1,5 +1,5 @@
 use std::fs::{File, OpenOptions};
-use std::io::{Seek, SeekFrom, Write};
+use std::io::Write;
 
 use super::io_device::IoDevice;
 use super::{ActualDevice, SlimComputer};
@@ -35,11 +35,11 @@ impl LinePrinter {
 }
 
 impl ActualDevice for LinePrinter {
-  fn read(&mut self, computer: &SlimComputer) -> Vec<mix::Word> {
+  fn read(&mut self, _computer: &SlimComputer) -> Vec<mix::Word> {
     panic!("cannot read from a line printer");
   }
 
-  fn write(&mut self, words: &[mix::Word], computer: &SlimComputer) {
+  fn write(&mut self, words: &[mix::Word], _computer: &SlimComputer) {
     let mut line = String::new();
     for word in words.iter() {
       let word_str = word.to_char_code();
@@ -50,7 +50,7 @@ impl ActualDevice for LinePrinter {
     self.file.write(line.as_bytes()).unwrap();
   }
 
-  fn control(&mut self, _m: isize, computer: &SlimComputer) {
+  fn control(&mut self, _m: isize, _computer: &SlimComputer) {
     // panic!("IOC for line printer not implemented")
   }
 

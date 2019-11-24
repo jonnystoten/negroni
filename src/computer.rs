@@ -179,7 +179,7 @@ impl fmt::Debug for Computer {
       .map(|cell| cell.read())
       .enumerate()
       .filter(|(_, val)| val.value() != 0)
-      .map(|(index, val)| format!("{}: {:?}", index, val))
+      .map(|(index, val)| format!("  {:4}: {:?}", index, val))
       .collect::<Vec<String>>()
       .join("\n");
 

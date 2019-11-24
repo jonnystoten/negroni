@@ -1,6 +1,7 @@
 mod address;
 mod instruction;
 mod word;
+mod debugging;
 
 #[allow(dead_code)]
 pub mod op_codes;

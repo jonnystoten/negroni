@@ -170,12 +170,12 @@ impl Lexer {
 
       buf.push(ch);
 
-      if !is_char_code(ch) {
-        return (Token::ILLEGAL, buf);
-      }
-
       if ch == '"' {
         return (Token::STRINGLITERAL, buf);
+      }
+
+      if !is_char_code(ch) {
+        return (Token::ILLEGAL, buf);
       }
     }
   }
@@ -256,11 +256,19 @@ fn is_char_code(ch: char) -> bool {
   is_alpha_num(ch)
     || ch == ' '
     || ch == '.'
-    || ch == '"'
+    || ch == ','
+    || ch == '('
+    || ch == ')'
+    || ch == '+'
+    || ch == '-'
+    || ch == '*'
+    || ch == '/'
+    || ch == '='
     || ch == '$'
     || ch == '<'
     || ch == '>'
     || ch == '@'
     || ch == ';'
+    || ch == ':'
     || ch == '\''
 }

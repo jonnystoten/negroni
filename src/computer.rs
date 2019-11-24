@@ -126,9 +126,9 @@ impl Computer {
     self.start_interactive(|_| {});
   }
 
-  pub fn start_interactive<F>(&mut self, f: F)
+  pub fn start_interactive<F>(&mut self, mut f: F)
   where
-    F: Fn(&Self) -> (),
+    F: FnMut(&mut Self) -> (),
   {
     self.running = true;
     while self.running {

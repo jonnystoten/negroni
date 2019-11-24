@@ -4,6 +4,7 @@ use std::io::{Read, Seek, SeekFrom};
 use std::collections::HashMap;
 
 use bincode;
+
 use clap::App;
 
 use negroni::computer;
@@ -15,15 +16,21 @@ fn main() {
         .author("Jonny Stoten <jonny@jonnystoten.com>")
         .about("Emulator for MIX")
         .args_from_usage(
-            "--format=<FORMAT> 'Sets the input format'
-             [INPUT]           'Sets the input file to use'
-             --interactive     'Enables interactive debugger'",
+            "--format=<FORMAT>    'Sets the input format'
+             [INPUT]              'Sets the input file to use'
+             --interactive        'Enables interactive debugger'
+             --break=[BREAKPOINT] 'Specifies a PC to break on'",
         )
         .get_matches();
 
 
     let interactive = matches.is_present("interactive");
     let format = matches.value_of("format").unwrap();
+    let breakpoint = matches.value_of("break");
+    let breakpoint: Option<usize> = match breakpoint {
+        Some(b) => Some(b.parse().unwrap()),
+        None => None
+    };
 
     let mut computer = computer::Computer::new();
 
@@ -68,11 +75,24 @@ fn main() {
 
 
     if interactive {
+        let mut waiting_for_break = match breakpoint {
+            Some(_) => true,
+            None => false,
+        };
         computer.start_interactive(|computer| {
             if computer.program_counter < 100 {
                 // don't step through the loader
                 return;
             }
+
+            if waiting_for_break {
+                if computer.program_counter != breakpoint.unwrap() {
+                    return;
+                } else {
+                    waiting_for_break = false;
+                }
+            }
+
             eprintln!("===MIX COMPUTER===");
             eprintln!("{:?}", computer);
             let mut stdin = std::io::stdin();

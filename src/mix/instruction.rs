@@ -31,7 +31,7 @@ impl Instruction {
       op_codes::HLT => match self.modification {
         0 => Box::new(operations::ConvertToNumeric::new()),
         1 => Box::new(operations::ConvertToCharacters::new()),
-        2 => Box::new(operations::Halt::new()),
+        2 => Box::new(operations::Halt::new(self)),
         _ => panic!("unknown modification for special op: {}", self.modification),
       },
       op_codes::SLA => Box::new(operations::Shift::new(self)),

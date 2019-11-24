@@ -24,7 +24,7 @@ lazy_static! {
     m.insert("SRAX", OpCode {value: mix::op_codes::SRAX, default_fs: 3});
     m.insert("SLC", OpCode  {value: mix::op_codes::SLC, default_fs: 4});
     m.insert("SRC", OpCode  {value: mix::op_codes::SRC, default_fs: 5});
-    m.insert("MOVE", OpCode {value: mix::op_codes::MOVE, default_fs: 5});
+    m.insert("MOVE", OpCode {value: mix::op_codes::MOVE, default_fs: 1});
     m.insert("LDA", OpCode  {value: mix::op_codes::LDA, default_fs: 5});
     m.insert("LD1", OpCode  {value: mix::op_codes::LD1, default_fs: 5});
     m.insert("LD2", OpCode  {value: mix::op_codes::LD2, default_fs: 5});
